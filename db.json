@@ -3,17 +3,25 @@
     {
       "id": 1,
       "title": "json-server",
-      "author": "typicode"
+      "author": "typicode",
+      "foo": "extra field",
+      "createdTime": "TODO",
+      "lastModifiedTime": "TODO"
     },
     {
       "title": "createpost",
       "author": "eva",
-      "id": 2
+      "id": 2,
+      "foo": "not needed",
+      "createdTime": "TODO",
+      "lastModifiedTime": "TODO"
     },
     {
       "title": "updatepost",
       "author": "maxmax",
-      "id": 3
+      "id": 3,
+      "createdTime": "TODO",
+      "lastModifiedTime": "TODO"
     }
   ],
   "comments": [
