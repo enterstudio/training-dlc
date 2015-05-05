@@ -32,10 +32,11 @@ function list(req, res, next) {
     function(error, response, body) {
       //transform the response from the external API. The response must be JSON.
       //no data type translation necessary because the external API sends back JSON
-      res.status((error && error.status) || 500);
+      res.status((error && error.status) || response.statusCode);
       if(error == null) {
         //ensure the response matches the Kinvey requires fields: _id and _kmd(TODO: check this)
         body._id = body.id;
+        body._acl = {}
         delete body.id;
         //remove unnecessary fields
         delete body.foo;
@@ -64,8 +65,8 @@ function create(req, res, next) {
       json: req.body
     },
     function(error, response, body) {
+      res.status((error && error.status) || response.statusCode);
       if(error == null) {
-          //TODO: send back the right code
           res.send(body);
       } else {
           console.log(error);
@@ -86,6 +87,7 @@ function show(req, res, next) {
       uri: apiServerUrl + '/' + req.params.id
     },
     function(error, response, body) {
+      res.status((error && error.status) || response.statusCode);
       if(error == null) {
           res.send(body);
       } else {
@@ -110,6 +112,7 @@ function update(req, res, next) {
       json: req.body
     },
     function(error, response, body) {
+      res.status((error && error.status) || response.statusCode);
       if(error == null) {
           res.send(body);
       } else {
@@ -131,6 +134,7 @@ function destroy(req, res, next) {
       uri: apiServerUrl + '/' + req.params.id
     },
     function(error, response, body) {
+      res.status((error && error.status) || response.statusCode);
       if(error == null) {
           res.send(body);
       } else {
