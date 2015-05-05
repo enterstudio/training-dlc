@@ -23,6 +23,7 @@ var bodyParser = require('body-parser');
 var db = require('./db/json-server');
 
 var healthCheck = require('./routes/health-check');
+var auth = require('./routes/auth');
 var posts = require('./routes/posts');
 //var other-collection = require('./routes/other-collection');
 
@@ -41,6 +42,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //Health check in point for DLC service monitoring
 app.use('/', healthCheck);
+//A route for custom authentication
+app.use('/auth', auth);
 //A route for a single collection that contains all necessary CRUD operations
 app.use('/posts', posts);
 //Add additional route(s) for other collections that receive data from this DLC
