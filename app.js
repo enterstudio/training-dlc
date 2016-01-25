@@ -10,7 +10,7 @@
 * The DLC receives REST API requests in the same format that Kinvey receives them.
 * The request is then translated to an external API format (SOAP, other REST, etc).
 * Once the response comes back the DLC should both translate the response into JSON
-* if it is not already JSON and remove as much data as possible for a high perfomance
+* if it is not already JSON and remove as much data as possible for a high performance
 * response to the mobile app.
 */
 
@@ -24,7 +24,7 @@ var db = require('./db/json-server');
 
 var healthCheck = require('./routes/health-check');
 var auth = require('./routes/auth');
-var posts = require('./routes/posts');
+var customers = require('./routes/customers');
 //var other-collection = require('./routes/other-collection');
 
 var app = express();
@@ -45,9 +45,11 @@ app.use('/', healthCheck);
 //A route for custom authentication
 app.use('/auth', auth);
 //A route for a single collection that contains all necessary CRUD operations
-app.use('/posts', posts);
-//Add additional route(s) for other collections that receive data from this DLC
-//TODO: create DLC endpoints for another collection
+//baas.kinvey.com/appdata/{kid}/{collection} ==> {dlc_url}/{collection}
+//baas.kinvey.com/appdata/{kid}/{collection}/{id} ==> {dlc_url}/{collection}/{id}
+app.use('/customers', customers);
+//Additional route(s) for other Kiney collections that receive data from this DLC
+//TODO: create DLC endpoints for another Kinvey collection
 //app.use('/other-collection', other-collection);
 
 // catch 404 and forward to error handler

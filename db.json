@@ -1,27 +1,28 @@
 {
-  "posts": [
+  "customers": [
     {
       "id": 1,
-      "title": "json-server",
-      "author": "typicode",
-      "foo": "extra field",
+      "name": "Iron Man",
+      "secret_identity": "Tony Stark",
       "createdTime": "TODO",
-      "lastModifiedTime": "TODO"
+      "lastModifiedTime": "TODO",
+      "foo": "unecessary field"
     },
     {
-      "title": "createpost",
-      "author": "eva",
       "id": 2,
-      "foo": "not needed",
+      "name": "Batman",
+      "secret_identity": "Bruce Wayne",
       "createdTime": "TODO",
-      "lastModifiedTime": "TODO"
+      "lastModifiedTime": "TODO",
+      "foo": "unecessary field"
     },
     {
-      "title": "updatepost",
-      "author": "maxmax",
       "id": 3,
+      "name": "Superman",
+      "secret_identity": "Clark Kent",
       "createdTime": "TODO",
-      "lastModifiedTime": "TODO"
+      "lastModifiedTime": "TODO",
+      "foo": "unecessary field"
     }
   ],
   "comments": [

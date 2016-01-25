@@ -5,7 +5,7 @@ var router = express.Router();
 //TODO: replace with your external data source
 var authServerUrl = "";
 
-router.route('/').post(auth); // POST {dlc_url}/posts
+router.route('/').post(auth); // POST {alc_url}
 
 function auth(req, res, next) {
   //TODO: build the request body to the external auth

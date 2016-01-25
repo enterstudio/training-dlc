@@ -1,0 +1,32 @@
+-auth
+  - Where does the request come from?
+  - What endpoint do I make?
+  - What does the request structure look like?
+  - authsource request
+  - What does the response structure look like?
+-data
+  - Where do the requests come from?
+  - What endpoints do I need?
+  - CRUD
+  - What does the request structure look like?
+    - headers
+      - x-auth-key
+      - x-kinvey-client-app-version
+      - x-kinvey-custom-request-properties
+      - x-kinvey-auth
+    - query params
+      - mongo style queries
+      - sort
+      - limit
+      - skip
+  - datasource request
+  - What does the response structure look like?
+    - _id
+    - _kmd.ect
+    - _kmd.lmt
+    - _acl
+-_count
+  - What does the request structure look like?
+  - datasource request
+  - What does the response structure look like?
+-health_check
