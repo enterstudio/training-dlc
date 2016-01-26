@@ -35,8 +35,6 @@ function list(req, res, next) {
       res.status((error && error.status) || response.statusCode);
       if(error == null) {
         body = sanitizeResponse(body);
-        //remove unnecessary fields
-        delete body.foo;
         res.send(body);
       } else {
         console.log(error);
@@ -52,8 +50,8 @@ function list(req, res, next) {
  */
 function create(req, res, next) {
   //TODO: Move this to the REST and SOAP servers
-  //req.body.createTime = moment.now();
-  //req.body.lastModifiedTime = moment.now();
+  req.body.created_time = moment();
+  req.body.last_modified_time = moment();
   request(
     {
       method: 'POST',
@@ -87,6 +85,7 @@ function show(req, res, next) {
     function(error, response, body) {
       res.status((error && error.status) || response.statusCode);
       if(error == null) {
+          body = sanitizeResponse(body);
           res.send(body);
       } else {
           console.log(error);
@@ -101,7 +100,7 @@ function show(req, res, next) {
  * Receives an id parameter and sends back ? //TODO: check this
  */
 function update(req, res, next) {
-  //req.body.lastModifiedTime = moment.now();
+  req.body.created_time = moment();
   request(
     {
       method: 'PUT',
@@ -146,7 +145,10 @@ function sanitizeResponse(body) {
   //ensure the response matches the Kinvey requires fields: _id and _kmd(TODO: check this)
   body._id = body.id;
   delete body.id;
-  body._acl = {}
+  body._acl = {};
+  //remove unnecessary fields
+  delete body.foo;
+  body._kmd = {"ect":body.created_time, "lmt":body.last_modified_time};
   return body;
 }
 
