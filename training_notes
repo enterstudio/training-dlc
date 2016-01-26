@@ -30,3 +30,11 @@
   - datasource request
   - What does the response structure look like?
 -health_check
+
+TODO:
+sort
+limit
+skip
+missing id error
+401 unauthenticated
+health check

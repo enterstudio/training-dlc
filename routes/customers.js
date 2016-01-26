@@ -55,18 +55,14 @@ function list(req, res, next) {
 /*
  * POST http://baas.kinvey.com/appdata/{kid_id}/customers
  * POST http://{dlc_url}/customers
- * Receives a JSON body of the object to create and sends back success 200 (TODO: check this)
+ * Receives a JSON body of the object to create and sends back success 200
  */
 function create(req, res, next) {
-  //TODO: Move this to the REST and SOAP servers
-  req.body.created_time = moment();
-  req.body.last_modified_time = moment();
   request(
     {
       method: 'POST',
       uri: apiServerUrl,
-      //translate the JSON body into a format the external data can save
-      json: req.body
+      json: formatRequest(req.body)
     },
     function(error, response, body) {
       res.status((error && error.status) || response.statusCode);
@@ -105,7 +101,8 @@ function show(req, res, next) {
 /*
  * PUT http://baas.kinvey.com/appdata/{kid_id}/customers/:id
  * PUT http://{dlc_url}/customers/:id
- * Receives an id parameter and sends back ? //TODO: check this
+ * Receives an id parameter and sends back the updated JSON document
+ * with
  */
 function update(req, res, next) {
   req.body = formatRequest(req.body);
@@ -178,11 +175,23 @@ function count(req, res, next) {
   )
 }
 
+/*
+ * Turn the request into a format that the data source expects.
+ * _id ==> primary key
+ * _kmd ==> created and last modified field
+ * _acl ==> discarded
+ */
 function formatRequest(body) {
   body.id = body._id;
   delete body._id;
-  body.created_time = body._kmd.ect;
-  body.last_modified_time = body._kmd.lmt;
+  //Fill in the required fields if missing (on create)
+  if(body._kmd === undefined) {
+    body.created_time = moment();
+    body.last_modified_time = moment();
+  } else {
+    body.created_time = body._kmd.ect;
+    body.last_modified_time = body._kmd.lmt;
+  }
   delete body._kmd;
   delete body._acl;
   return body;
@@ -191,17 +200,18 @@ function formatRequest(body) {
 /*
  * Clean up the response body from your data source to match the format
  * expected by the Kinvey cloud and SDK.
+ * _id ==> must be a string and is the primary key
+ * _kmd ==> Created time and last modified time, timezone must match yyyy-mm-ddThh:mm:ss.msZ
+ * _acl ==> used by Kinvey but can be empty
  */
 function formatResponse(body) {
-  //ensure the response matches the Kinvey required fields: _id and _kmd
-  body._id = body.id;
+  body._id = body.id.toString();
   delete body.id;
   body._kmd = {"ect":body.created_time, "lmt":body.last_modified_time};
   delete body.created_time;
   delete body.last_modified_time;
   body._acl = {};
-  //remove fields that are not relevant to the mobile app
-  delete body.foo;
+  delete body.foo; //remove fields that are not relevant to the mobile app
   return body;
 }
 

@@ -41,7 +41,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // route middleware that will happen on every request
 app.use(function(req, res, next) {
-  console.log(req.method, req.url);
+  console.log("=== DLC inbound request ===")
+  console.log("Request", req.method, req.url);
+  console.log("Shared Secret", req.headers['x-auth-key']);
+  console.log("MIC auth", req.headers['x-kinvey-auth']);
+  console.log("Client App Version", req.headers['x-kinvey-client-app-version']); //TODO
+  console.log("Custom Request Properties", req.headers['x-kinvey-custom-request-properties']); //TODO
+  console.log("Request Body", req.body)
   next();
 });
 
