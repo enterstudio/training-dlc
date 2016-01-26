@@ -7,6 +7,9 @@ var router = express.Router();
 //TODO: replace with your external data source
 var apiServerUrl = "http://localhost:3000/customers";
 
+router.route('/_count')
+    .get(count); // GET {dlc_url}/customers/_count
+
 router.route('/')
     .get(list) // GET {dlc_url}/customers
     .post(create); // POST {dlc_url}/customers
@@ -15,9 +18,6 @@ router.route('/:id')
     .get(show) // GET {dlc_url}/customers/:id
     .put(update) // PUT {dlc_url}/customers/:id
     .delete(destroy);// DELETE {dlc_url}/customers/:id
-
-//router.use('/_count')
-//    .get(count); // GET {dlc_url}/customers/_count
 
 /*
  * GET http://baas.kinvey.com/appdata/{kid_id}/customers
@@ -168,6 +168,7 @@ function count(req, res, next) {
       res.status((error && error.status) || response.statusCode);
       if(error == null) {
           // Response format is {"count":150}
+          body = JSON.parse(body);
           body = {"count": body.length};
           res.send(body);
       } else {
