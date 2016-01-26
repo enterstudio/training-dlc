@@ -39,6 +39,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// route middleware that will happen on every request
+app.use(function(req, res, next) {
+  console.log(req.method, req.url);
+  next();
+});
 
 //Health check in point for DLC service monitoring
 app.use('/', healthCheck);

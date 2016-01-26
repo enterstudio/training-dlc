@@ -16,14 +16,20 @@ router.route('/:id')
     .put(update) // PUT {dlc_url}/customers/:id
     .delete(destroy);// DELETE {dlc_url}/customers/:id
 
+//router.use('/_count')
+//    .get(count); // GET {dlc_url}/customers/_count
+
 /*
  * GET http://baas.kinvey.com/appdata/{kid_id}/customers
- * GET http://{DLC_url}/customers
+ * GET http://{dlc_url}/customers
  * Receives no parameters and send back an array of customers objects
  */
 function list(req, res, next) {
-  //create an external API request
-  //no translation necessary because the external API is REST
+ /*
+  * Create an external API request that matches your data source's format.
+  * no translation of data request format necessary because the external
+  * API in this case is REST.
+  */
   request(
     {
       method: 'GET',
@@ -34,7 +40,10 @@ function list(req, res, next) {
       //no data type translation necessary because the external API sends back JSON
       res.status((error && error.status) || response.statusCode);
       if(error == null) {
-        body = sanitizeResponse(body);
+        body = JSON.parse(body);
+        body.forEach(function(customer) {
+          customer = formatResponse(customer);
+        });
         res.send(body);
       } else {
         console.log(error);
@@ -45,7 +54,7 @@ function list(req, res, next) {
 
 /*
  * POST http://baas.kinvey.com/appdata/{kid_id}/customers
- * POST http://{DLC_url}/customers
+ * POST http://{dlc_url}/customers
  * Receives a JSON body of the object to create and sends back success 200 (TODO: check this)
  */
 function create(req, res, next) {
@@ -62,8 +71,7 @@ function create(req, res, next) {
     function(error, response, body) {
       res.status((error && error.status) || response.statusCode);
       if(error == null) {
-          body = sanitizeResponse(body);
-          res.send(body);
+          res.send(formatResponse(body));
       } else {
           console.log(error);
       }
@@ -73,7 +81,7 @@ function create(req, res, next) {
 
 /*
  * GET http://baas.kinvey.com/appdata/{kid_id}/customers/:id
- * GET http://{DLC_url}/customers/:id
+ * GET http://{dlc_url}/customers/:id
  * Receives an id parameter and sends back a single post object
  */
 function show(req, res, next) {
@@ -85,10 +93,10 @@ function show(req, res, next) {
     function(error, response, body) {
       res.status((error && error.status) || response.statusCode);
       if(error == null) {
-          body = sanitizeResponse(body);
-          res.send(body);
+        body = JSON.parse(body);
+        res.send(formatResponse(body));
       } else {
-          console.log(error);
+        console.log(error);
       }
     }
   );
@@ -96,11 +104,12 @@ function show(req, res, next) {
 
 /*
  * PUT http://baas.kinvey.com/appdata/{kid_id}/customers/:id
- * PUT http://{DLC_url}/customers/:id
+ * PUT http://{dlc_url}/customers/:id
  * Receives an id parameter and sends back ? //TODO: check this
  */
 function update(req, res, next) {
-  req.body.created_time = moment();
+  req.body = formatRequest(req.body);
+  body.last_modified_time = moment(); //TODO: is this needed?
   request(
     {
       method: 'PUT',
@@ -121,7 +130,7 @@ function update(req, res, next) {
 
 /*
  * DELETE http://baas.kinvey.com/appdata/{kid_id}/customers/:id
- * DELETE http://{DLC_url}/customers/:id
+ * DELETE http://{dlc_url}/customers/:id
  * Receives an id parameter and sends back ? //TODO: check this
  */
 function destroy(req, res, next) {
@@ -133,22 +142,65 @@ function destroy(req, res, next) {
     function(error, response, body) {
       res.status((error && error.status) || response.statusCode);
       if(error == null) {
-          res.send(body);
+        //body contains a count of the number of records deleted
+        body = {"count":1};
+        // DELETE response should be a 200 so the request body is visible
+        res.status(200).send(body);
       } else {
-          console.log(error);
+        console.log(error);
       }
     }
   );
 };
 
-function sanitizeResponse(body) {
-  //ensure the response matches the Kinvey requires fields: _id and _kmd(TODO: check this)
+/*
+ * Return the number of items that exist in this collection.
+ * Used by the Kinvey console to display data that is available in the
+ * collection.
+ */
+function count(req, res, next) {
+  request(
+    {
+      method: 'GET',
+      uri: apiServerUrl
+    },
+    function(error, response, body) {
+      res.status((error && error.status) || response.statusCode);
+      if(error == null) {
+          // Response format is {"count":150}
+          body = {"count": body.length};
+          res.send(body);
+      } else {
+          console.log(error);
+      }
+    }
+  )
+}
+
+function formatRequest(body) {
+  body.id = body._id;
+  delete body._id;
+  body.created_time = body._kmd.ect;
+  body.last_modified_time = body._kmd.lmt;
+  delete body._kmd;
+  delete body._acl;
+  return body;
+}
+
+/*
+ * Clean up the response body from your data source to match the format
+ * expected by the Kinvey cloud and SDK.
+ */
+function formatResponse(body) {
+  //ensure the response matches the Kinvey required fields: _id and _kmd
   body._id = body.id;
   delete body.id;
-  body._acl = {};
-  //remove unnecessary fields
-  delete body.foo;
   body._kmd = {"ect":body.created_time, "lmt":body.last_modified_time};
+  delete body.created_time;
+  delete body.last_modified_time;
+  body._acl = {};
+  //remove fields that are not relevant to the mobile app
+  delete body.foo;
   return body;
 }
 
