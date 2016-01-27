@@ -33,8 +33,6 @@
 
 TODO:
 sort
-limit
-skip
 missing id error
 401 unauthenticated
 health check

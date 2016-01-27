@@ -6,6 +6,20 @@ var router = express.Router();
 //Url for the external data source.
 //TODO: replace with your external data source
 var apiServerUrl = "http://localhost:3000/customers";
+var outboundRequest = "";
+
+// add the correct parameters
+router.use(function(req, res, next) {
+  outboundRequest = apiServerUrl;
+  if(req.params.id) {
+    outboundRequest += '/' + req.params.id;
+  }
+  if (req.parameters) {
+    outboundRequest += req.parameters;
+  }
+  console.log("Outbound Request:", outboundRequest);
+  next();
+});
 
 router.route('/_count')
     .get(count); // GET {dlc_url}/customers/_count
@@ -33,7 +47,7 @@ function list(req, res, next) {
   request(
     {
       method: 'GET',
-      uri: apiServerUrl
+      uri: outboundRequest
     },
     function(error, response, body) {
       //transform the response from the external API. The response must be JSON.
@@ -61,7 +75,7 @@ function create(req, res, next) {
   request(
     {
       method: 'POST',
-      uri: apiServerUrl,
+      uri: outboundRequest,
       json: formatRequest(req.body)
     },
     function(error, response, body) {
@@ -84,7 +98,7 @@ function show(req, res, next) {
   request(
     {
       method: 'GET',
-      uri: apiServerUrl + '/' + req.params.id
+      uri: outboundRequest
     },
     function(error, response, body) {
       res.status((error && error.status) || response.statusCode);
@@ -110,7 +124,7 @@ function update(req, res, next) {
   request(
     {
       method: 'PUT',
-      uri: apiServerUrl + '/' +req.params.id,
+      uri: outboundRequest,
       //translate the JSON body into a format the external data can update
       json: req.body
     },
@@ -134,7 +148,7 @@ function destroy(req, res, next) {
 	request(
     {
       method: 'DELETE',
-      uri: apiServerUrl + '/' + req.params.id
+      uri: outboundRequest
     },
     function(error, response, body) {
       res.status((error && error.status) || response.statusCode);
@@ -159,7 +173,7 @@ function count(req, res, next) {
   request(
     {
       method: 'GET',
-      uri: apiServerUrl
+      uri: outboundRequest
     },
     function(error, response, body) {
       res.status((error && error.status) || response.statusCode);

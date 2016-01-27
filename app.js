@@ -47,8 +47,23 @@ app.use(function(req, res, next) {
   console.log("MIC auth", req.headers['x-kinvey-auth']);
   console.log("Client App Version", req.headers['x-kinvey-client-app-version']); //TODO
   console.log("Custom Request Properties", req.headers['x-kinvey-custom-request-properties']); //TODO
-  console.log("Request Body", req.body)
+  console.log("Request Query", req.query);
+  console.log("Request Body", req.body);
   next();
+});
+
+// format query parameters correctly for the data source
+app.use(function (req, res, next) {
+    req.parameters = "";
+    if (req.query.skip) {
+        var skipParameter = req.parameters ? "&_start=" : "?_start=";
+        req.parameters += skipParameter + req.query.skip;
+    }
+    if (req.query.limit) {
+        var limitParameter = req.parameters ? "&_limit=" : "?_limit=";
+        req.parameters += limitParameter + req.query.limit;
+    }
+    next();
 });
 
 //Health check in point for DLC service monitoring
