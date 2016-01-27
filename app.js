@@ -16,9 +16,6 @@
 
 var express = require('express');
 var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var db = require('./db/json-server');
 
@@ -33,10 +30,8 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // route middleware that will happen on every request
@@ -52,19 +47,26 @@ app.use(function(req, res, next) {
   next();
 });
 
-// format query parameters correctly for the data source
+/*
+ * Convert query paramters from Kinvey standards to the custom datasource
+ * standards: sort, skip, limit. This is done for all collections as they
+ * all follow the same format.
+ */
 app.use(function (req, res, next) {
     req.parameters = "";
     if (req.query.skip) {
-        var skipParameter = req.parameters ? "&_start=" : "?_start=";
-        req.parameters += skipParameter + req.query.skip;
+      // The format used by the custom datasource goes here. In this case it is _start
+      var skipParameter = req.parameters ? "&_start=" : "?_start=";
+      req.parameters += skipParameter + req.query.skip;
     }
     if (req.query.limit) {
-        var limitParameter = req.parameters ? "&_limit=" : "?_limit=";
-        req.parameters += limitParameter + req.query.limit;
+      // The format used by the custom datasource goes here. In this case it is _limit
+      var limitParameter = req.parameters ? "&_limit=" : "?_limit=";
+      req.parameters += limitParameter + req.query.limit;
     }
     if(req.query.sort) {
       sort = JSON.parse(req.query.sort);
+      // The format used by the custom datasource goes here. In this case it is _sort
       var sortParamter = req.parameters ? "&_sort=" : "?_sort=";
       var sortField = Object.keys(sort)[0];
       req.parameters += sortParamter + sortField;

@@ -8,9 +8,13 @@ var router = express.Router();
 var apiServerUrl = "http://localhost:3000/customers";
 var outboundRequest = "";
 
-// add the correct parameters
+/*
+ * For this collection add the right parameters and filters onto the
+ * outbound request.
+ */
 router.use(function(req, res, next) {
   outboundRequest = apiServerUrl;
+  // Kinvey sends ids in the REST style and the datasource receives them the same way
   if(req.params.id) {
     outboundRequest += '/' + req.params.id;
   }
