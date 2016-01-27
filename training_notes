@@ -32,7 +32,7 @@
 -health_check
 
 TODO:
-sort
+query
 missing id error
 401 unauthenticated
 health check

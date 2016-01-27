@@ -63,6 +63,14 @@ app.use(function (req, res, next) {
         var limitParameter = req.parameters ? "&_limit=" : "?_limit=";
         req.parameters += limitParameter + req.query.limit;
     }
+    if(req.query.sort) {
+      sort = JSON.parse(req.query.sort);
+      var sortParamter = req.parameters ? "&_sort=" : "?_sort=";
+      var sortField = Object.keys(sort)[0];
+      req.parameters += sortParamter + sortField;
+      var sortDirection = sort[sortField] == 1 ? "ASC" : "DESC";
+      req.parameters += "&_order=" + sortDirection;
+    }
     next();
 });
 
