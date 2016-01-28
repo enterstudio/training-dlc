@@ -7,24 +7,24 @@ var format = require('../utils/formatting');
 var router = express.Router();
 //Url for the external data source.
 //TODO: replace with your external data source
-var apiServerUrl = "http://localhost:3000/customers";
+var apiServerUrl = "http://localhost:3000/partner";
 
 router.route('/_count')
-    .get(count); // GET {dlc_url}/customers/_count
+    .get(count); // GET {dlc_url}/partner/_count
 
 router.route('/')
-    .get(list) // GET {dlc_url}/customers
-    .post(create); // POST {dlc_url}/customers
+    .get(list) // GET {dlc_url}/partner
+    .post(create); // POST {dlc_url}/partner
 
 router.route('/:id')
-    .get(show) // GET {dlc_url}/customers/:id
-    .put(update) // PUT {dlc_url}/customers/:id
-    .delete(destroy);// DELETE {dlc_url}/customers/:id
+    .get(show) // GET {dlc_url}/partner/:id
+    .put(update) // PUT {dlc_url}/partner/:id
+    .delete(destroy);// DELETE {dlc_url}/partner/:id
 
 /*
- * GET http://baas.kinvey.com/appdata/{kid_id}/customers
- * GET http://{dlc_url}/customers
- * Receives no parameters and send back an array of customers objects
+ * GET http://baas.kinvey.com/appdata/{kid_id}/partner
+ * GET http://{dlc_url}/partner
+ * Receives no parameters and send back an array of partner objects
  */
 function list(req, res, next) {
  /*
@@ -55,8 +55,8 @@ function list(req, res, next) {
 };
 
 /*
- * POST http://baas.kinvey.com/appdata/{kid_id}/customers
- * POST http://{dlc_url}/customers
+ * POST http://baas.kinvey.com/appdata/{kid_id}/partner
+ * POST http://{dlc_url}/partner
  * Receives a JSON body of the object to create and sends back success 200
  */
 function create(req, res, next) {
@@ -78,8 +78,8 @@ function create(req, res, next) {
 };
 
 /*
- * GET http://baas.kinvey.com/appdata/{kid_id}/customers/:id
- * GET http://{dlc_url}/customers/:id
+ * GET http://baas.kinvey.com/appdata/{kid_id}/partner/:id
+ * GET http://{dlc_url}/partner/:id
  * Receives an id parameter and sends back a single post object
  */
 function show(req, res, next) {
@@ -101,14 +101,14 @@ function show(req, res, next) {
 };
 
 /*
- * PUT http://baas.kinvey.com/appdata/{kid_id}/customers/:id
- * PUT http://{dlc_url}/customers/:id
+ * PUT http://baas.kinvey.com/appdata/{kid_id}/partner/:id
+ * PUT http://{dlc_url}/partner/:id
  * Receives an id parameter and sends back the updated JSON document
  * with
  */
 function update(req, res, next) {
   req.body = format.request(req.body);
-  req.body.last_modified_time = moment(); //TODO: is this needed?
+  body.last_modified_time = moment(); //TODO: is this needed?
   request(
     {
       method: 'PUT',
@@ -119,7 +119,7 @@ function update(req, res, next) {
     function(error, response, body) {
       res.status((error && error.status) || response.statusCode);
       if(error == null) {
-          res.send(formatResponse(body));
+          res.send(body);
       } else {
           console.log(error);
       }
@@ -128,8 +128,8 @@ function update(req, res, next) {
 };
 
 /*
- * DELETE http://baas.kinvey.com/appdata/{kid_id}/customers/:id
- * DELETE http://{dlc_url}/customers/:id
+ * DELETE http://baas.kinvey.com/appdata/{kid_id}/partner/:id
+ * DELETE http://{dlc_url}/partner/:partnerid
  * Receives an id parameter and sends back a count of deleted items
  */
 function destroy(req, res, next) {
@@ -191,7 +191,7 @@ function formatResponse(body) {
   delete body.created_time;
   delete body.last_modified_time;
   body._acl = {};
-  delete body.foo; //remove fields that are not relevant to the mobile app
+
   return body;
 }
 

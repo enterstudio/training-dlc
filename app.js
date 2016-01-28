@@ -22,6 +22,7 @@ var db = require('./db/json-server');
 var healthCheck = require('./routes/health-check');
 var auth = require('./routes/auth');
 var customers = require('./routes/customers');
+var partner = require('./routes/partner');
 //var other-collection = require('./routes/other-collection');
 
 var app = express();
@@ -84,6 +85,7 @@ app.use('/auth', auth);
 //baas.kinvey.com/appdata/{kid}/{collection} ==> {dlc_url}/{collection}
 //baas.kinvey.com/appdata/{kid}/{collection}/{id} ==> {dlc_url}/{collection}/{id}
 app.use('/customers', customers);
+app.use('/partner', partner);
 //Additional route(s) for other Kiney collections that receive data from this DLC
 //TODO: create DLC endpoints for another Kinvey collection
 //app.use('/other-collection', other-collection);
@@ -94,28 +96,5 @@ app.use(function(req, res, next) {
   err.status = 404;
   next(err);
 });
-
-// error handlers
-
-// development error handler will print stacktrace
-if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
-    });
-  });
-}
-
-// production error handler no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
-});
-
 
 module.exports = app;
