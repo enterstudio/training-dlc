@@ -193,7 +193,7 @@ function formatResponse(body) {
   body._acl = {};
   body.partnername = body.name;
   delete body.name;
-  body.partnercompany = body.company;
+  body.partnercompany = body.company ? body.company.name : "";
   delete body.company;
 
   return body;
