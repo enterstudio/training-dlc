@@ -191,6 +191,10 @@ function formatResponse(body) {
   delete body.created_time;
   delete body.last_modified_time;
   body._acl = {};
+  body.partnername = body.name;
+  delete body.name;
+  body.partnercompany = body.company;
+  delete body.company;
 
   return body;
 }
