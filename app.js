@@ -35,13 +35,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// route middleware that will happen on every request
+//Logging to see what comes in with every request to Kinvey
 app.use(function(req, res, next) {
   console.log("=== DLC inbound request ===")
-  console.log("Request", req.method, req.url);
+  //incoming request info
+  console.log("Request", req.host, req.method, req.url);
+  //configured secret for the DLC from the Kinvey console
   console.log("Shared Secret", req.headers['x-auth-key']);
+  //Authorization header from MIC that can be used to authenticate with data sources
   console.log("MIC auth", req.headers['x-kinvey-auth']);
-  console.log("Client App Version", req.headers['x-kinvey-client-app-version']); //TODO
+  //Header from the Kinvey SDK that contains the mobile app version
+  console.log("Client App Version", req.headers['x-kinvey-client-app-version']);
+   //Custom header from the Kinvey SDK that the mobile developer can create
   console.log("Custom Request Properties", req.headers['x-kinvey-custom-request-properties']); //TODO
   console.log("Request Query", req.query);
   console.log("Request Body", req.body);
@@ -55,16 +60,19 @@ app.use(function(req, res, next) {
  */
 app.use(function (req, res, next) {
     req.parameters = "";
+    //TODO: LAB: add support for converting the Kinvey skip parameter
     if (req.query.skip) {
       // The format used by the custom datasource goes here. In this case it is _start
       var skipParameter = req.parameters ? "&_start=" : "?_start=";
       req.parameters += skipParameter + req.query.skip;
     }
+    //TODO: LAB: add support for converting the Kinvey limit parameter
     if (req.query.limit) {
       // The format used by the custom datasource goes here. In this case it is _limit
       var limitParameter = req.parameters ? "&_limit=" : "?_limit=";
       req.parameters += limitParameter + req.query.limit;
     }
+    //TODO: LAB: add support for converting the Kinvey sort parameter
     if(req.query.sort) {
       sort = JSON.parse(req.query.sort);
       // The format used by the custom datasource goes here. In this case it is _sort
@@ -79,15 +87,14 @@ app.use(function (req, res, next) {
 
 //Health check in point for DLC service monitoring
 app.use('/', healthCheck);
-//A route for custom authentication
-app.use('/auth', auth);
 //A route for a single collection that contains all necessary CRUD operations
+//TODO: vmwus1
 //baas.kinvey.com/appdata/{kid}/{collection} ==> {dlc_url}/{collection}
 //baas.kinvey.com/appdata/{kid}/{collection}/{id} ==> {dlc_url}/{collection}/{id}
 app.use('/customers', customers);
+//TODO: LAB: add partner route support
 app.use('/partner', partner);
-//Additional route(s) for other Kiney collections that receive data from this DLC
-//TODO: create DLC endpoints for another Kinvey collection
+//Additional route(s) for other Kiney collections can be added as needed:
 //app.use('/other-collection', other-collection);
 
 // catch 404 and forward to error handler

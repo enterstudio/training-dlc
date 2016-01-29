@@ -7,7 +7,7 @@ var format = require('../utils/formatting');
 var router = express.Router();
 //Url for the external data source.
 //TODO: replace with your external data source
-var apiServerUrl = "http://localhost:3000/customers";
+var apiServerUrl = "http://localhost:3000/customers";//TODO: make a different port
 
 router.route('/_count')
     .get(count); // GET {dlc_url}/customers/_count
@@ -108,7 +108,6 @@ function show(req, res, next) {
  */
 function update(req, res, next) {
   req.body = format.request(req.body);
-  req.body.last_modified_time = moment(); //TODO: is this needed?
   request(
     {
       method: 'PUT',

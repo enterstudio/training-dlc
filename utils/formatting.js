@@ -8,9 +8,11 @@ var formatting = {
    * _acl ==> discarded
    */
   request: function(body) {
+    //TODO: LAB: convert the Kinvey id into the data source id
     body.id = body._id;
     delete body._id;
     //Fill in the required fields if missing (on create)
+    //TODO: LAB: convert the Kinvey _kmd into the data source time stamps
     if(body._kmd === undefined) {
       body.created_time = moment();
       body.last_modified_time = moment();
@@ -19,6 +21,7 @@ var formatting = {
       body.last_modified_time = body._kmd.lmt;
     }
     delete body._kmd;
+    //TODO: LAB: remove the Kinvey _acl
     delete body._acl;
     return body;
   },
@@ -30,6 +33,7 @@ var formatting = {
   outboundRequest: function(apiServerUrl, req) {
     var outboundRequest = apiServerUrl;
     // Kinvey sends ids in the REST style and the datasource receives them the same way
+    //TODO: LAB: add the id to the outbound REST call
     if(req.params.id) {
       outboundRequest += '/' + req.params.id;
     }

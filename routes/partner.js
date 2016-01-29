@@ -6,7 +6,7 @@ var format = require('../utils/formatting');
 
 var router = express.Router();
 //Url for the external data source.
-//TODO: replace with your external data source
+//TODO: LAB: replace with your external data source
 var apiServerUrl = "http://localhost:3000/partner";
 
 router.route('/_count')
@@ -43,8 +43,8 @@ function list(req, res, next) {
       res.status((error && error.status) || response.statusCode);
       if(error == null) {
         body = JSON.parse(body);
-        body.forEach(function(customer) {
-          customer = formatResponse(customer);
+        body.forEach(function(partner) {
+          partner = formatResponse(partner);
         });
         res.send(body);
       } else {
@@ -108,7 +108,6 @@ function show(req, res, next) {
  */
 function update(req, res, next) {
   req.body = format.request(req.body);
-  body.last_modified_time = moment(); //TODO: is this needed?
   request(
     {
       method: 'PUT',
@@ -166,7 +165,7 @@ function count(req, res, next) {
     function(error, response, body) {
       res.status((error && error.status) || response.statusCode);
       if(error == null) {
-          // Response format is {"count":150}
+          //TODO: LAB: Response format is {"count":150}
           body = JSON.parse(body);
           body = {"count": body.length};
           res.send(body);
@@ -185,12 +184,16 @@ function count(req, res, next) {
  * _acl ==> used by Kinvey but can be empty
  */
 function formatResponse(body) {
+  //TODO: LAB: send back the correct id format to Kinvey
   body._id = body.id.toString();
   delete body.id;
+  //TODO: LAB: send back the correct time format to Kinvey
   body._kmd = {"ect":body.created_time, "lmt":body.last_modified_time};
   delete body.created_time;
   delete body.last_modified_time;
+  //TODO: LAB: send back the correct acl format to Kinvey
   body._acl = {};
+  //Field names are updated to match the expected format of the mobile app
   body.partnername = body.name;
   delete body.name;
   body.partnercompany = body.company ? body.company.name : "";
