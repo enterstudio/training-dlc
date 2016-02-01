@@ -18,6 +18,7 @@ var express = require('express');
 var path = require('path');
 var bodyParser = require('body-parser');
 var db = require('./db/json-server');
+var moment = require("moment");
 
 var healthCheck = require('./routes/health-check');
 var auth = require('./routes/auth');
@@ -38,8 +39,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 //Logging to see what comes in with every request to Kinvey
 app.use(function(req, res, next) {
   console.log("=== DLC inbound request ===")
+  console.log("Time", moment().toString());
   //incoming request info
-  console.log("Request", req.host, req.method, req.url);
+  console.log("Request", req.hostname, req.method, req.url);
   //configured secret for the DLC from the Kinvey console
   console.log("Shared Secret", req.headers['x-auth-key']);
   //Authorization header from MIC that can be used to authenticate with data sources

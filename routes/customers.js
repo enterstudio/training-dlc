@@ -1,8 +1,7 @@
 var express = require("express");
 var request = require("request");
-var moment = require("moment");
 
-var format = require('../utils/formatting');
+var format = require('../lib/formatting');
 
 var router = express.Router();
 //Url for the external data source.
