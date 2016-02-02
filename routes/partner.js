@@ -40,9 +40,10 @@ function list(req, res, next) {
     },
     function(error, response, body) {
       //transform the response from the external API. The response must be JSON.
-      //no data type translation necessary because the external API sends back JSON
+      //no data type translation necessary because the REST API in this case
+      //sends back JSON
       res.status((error && error.status) || response.statusCode);
-      if(error == null) {
+      if(error == null && res.statusCode == 200) {
         body = JSON.parse(body);
         body.forEach(function(partner) {
           partner = formatResponse(partner);
@@ -50,6 +51,7 @@ function list(req, res, next) {
         res.send(body);
       } else {
         console.log(error);
+        res.send(body);
       }
     }
   );
@@ -69,10 +71,11 @@ function create(req, res, next) {
     },
     function(error, response, body) {
       res.status((error && error.status) || response.statusCode);
-      if(error == null) {
+      if(error == null && res.statusCode == 201) {
           res.send(formatResponse(body));
       } else {
           console.log(error);
+          res.send(body);
       }
     }
   );
@@ -91,11 +94,12 @@ function show(req, res, next) {
     },
     function(error, response, body) {
       res.status((error && error.status) || response.statusCode);
-      if(error == null) {
+      if(error == null && res.statusCode == 200) {
         body = JSON.parse(body);
         res.send(formatResponse(body));
       } else {
         console.log(error);
+        res.send(body);
       }
     }
   );
@@ -118,10 +122,11 @@ function update(req, res, next) {
     },
     function(error, response, body) {
       res.status((error && error.status) || response.statusCode);
-      if(error == null) {
+      if(error == null && res.statusCode == 200) {
           res.send(body);
       } else {
           console.log(error);
+          res.send(body);
       }
     }
   );
@@ -140,13 +145,14 @@ function destroy(req, res, next) {
     },
     function(error, response, body) {
       res.status((error && error.status) || response.statusCode);
-      if(error == null) {
+      if(error == null && res.statusCode == 200) {
         //body contains a count of the number of records deleted
         body = {"count":1};
         // DELETE response should be a 200 so the request body is visible
         res.status(200).send(body);
       } else {
         console.log(error);
+        res.send(body);
       }
     }
   );
@@ -165,13 +171,14 @@ function count(req, res, next) {
     },
     function(error, response, body) {
       res.status((error && error.status) || response.statusCode);
-      if(error == null) {
+      if(error == null && res.statusCode == 200) {
           //TODO: LAB: Response format is {"count":150}
           body = JSON.parse(body);
           body = {"count": body.length};
           res.send(body);
       } else {
           console.log(error);
+          res.send(body);
       }
     }
   )
