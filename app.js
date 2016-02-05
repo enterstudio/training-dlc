@@ -1,7 +1,6 @@
 /*
 * training-dlc
-* Created by Austin Moothart(amoothart)
-* Kinvey 2015
+*
 * A reference sample of how to build a custom Data Link Connector (DLC) with Kinvey.
 * The DLC is a micro service that sits between Kinvey and your external data source.
 * It is a protocol and a data translator to connect your external data sources to your
