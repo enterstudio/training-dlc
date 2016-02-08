@@ -14,3 +14,30 @@ REST endpoints for a customers collection are provided
 * DELETE /customers/:id
 
 The goal of this training is to demonstrate how to convert Kinvey requests into an external source and vice versa.
+
+### Topics
+* Where do the requests come from?
+* What endpoints do I need?
+* CRUD Operations
+* What does the request structure look like?
+* headers
+* x-auth-key
+  * x-kinvey-client-app-version
+  * x-kinvey-custom-request-properties
+  * x-kinvey-auth
+* query params
+  * mongo style queries
+  * sort
+  * limit
+  * skip
+* Outbound Datasource Request
+* What does the response structure look like?
+    * _id
+    * _kmd.ect
+    * _kmd.lmt
+    * _acl
+*_count
+* What does the request structure look like?
+* Outbound datasource request
+* What does the response structure look like?
+*health_check
