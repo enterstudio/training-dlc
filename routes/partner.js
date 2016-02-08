@@ -5,7 +5,7 @@ var format = require('../lib/formatting');
 
 var router = express.Router();
 //Url for the external data source.
-//TODO: LAB: replace with your external data source
+//In a full custom DLC replace with your custom data source
 var apiServerUrl = "http://localhost:3000/partner";
 
 router.route('/_count')
@@ -26,30 +26,30 @@ router.route('/:id')
  * Receives no parameters and send back an array of partner objects
  */
 function list(req, res, next) {
- /*
-  * Create an external API request that matches your data source's format.
-  * no translation of data request format necessary because the external
-  * API in this case is REST.
-  */
+  //Convert the query to a format that the custom data source expects
   format.parseQuery(req);
-
+ /*
+  * Create an external API request that matches your custom data source's
+  * format. No translation of data request format necessary because the
+  * external API in this case is REST.
+  */
   request(
     {
       method: 'GET',
       uri: format.outboundRequest(apiServerUrl, req)
     },
     function(error, response, body) {
-      //transform the response from the external API. The response must be JSON.
-      //no data type translation necessary because the REST API in this case
-      //sends back JSON
+      //set the DLC response status code to the custom data source
       res.status((error && error.status) || response.statusCode);
       if(error == null && res.statusCode == 200) {
+        //on success convert to the correct format and respond
         body = JSON.parse(body);
         body.forEach(function(partner) {
           partner = formatResponse(partner);
         });
         res.send(body);
       } else {
+        //on failure: log the error and ensure that a clean error message is returned
         console.log(error);
         res.send(body);
       }
@@ -190,6 +190,9 @@ function count(req, res, next) {
  * _id ==> must be a string and is the primary key
  * _kmd ==> Created time and last modified time, timezone must match yyyy-mm-ddThh:mm:ss.msZ
  * _acl ==> used by Kinvey but can be empty
+ *
+ * The response must be JSON. In this case the response was already JSON.
+ * Fields names must be converted to match Kinvey standards.
  */
 function formatResponse(body) {
   //TODO: LAB: send back the correct id format to Kinvey

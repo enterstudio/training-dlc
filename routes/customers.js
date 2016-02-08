@@ -5,8 +5,8 @@ var format = require('../lib/formatting');
 
 var router = express.Router();
 //Url for the external data source.
-//TODO: replace with your external data source
-var apiServerUrl = "http://localhost:3000/customers";//TODO: make a different port
+//In a full custom DLC replace with your custom data source
+var apiServerUrl = "http://localhost:3000/customers";
 
 router.route('/_count')
     .get(count); // GET {dlc_url}/customers/_count

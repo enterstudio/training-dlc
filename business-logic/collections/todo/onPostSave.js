@@ -4,7 +4,6 @@ function onPostSave(request, response, modules) {
   var collectionAccess = modules.collectionAccess;
 	var push = modules.push;
 	
-	logger.info("request body: " + JSON.stringify(request.body));
 	if(request.body.completed == 1) {
 	  var userId = requestContext.getAuthenticatedUserId();
 	  collectionAccess.collection('user').findOne({"_id": collectionAccess.objectID(userId)}, function(err, user) {
