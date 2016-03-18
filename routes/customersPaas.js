@@ -2,12 +2,11 @@ var request = require("request");
 var format = require('../lib/formatting');
 var db = require('../db/json-server');
 var sdk = require('kinvey-backend-sdk');
+var jsonServer = require('json-server')
 
-var apiServerUrl = "http://localhost:3000/customers";
-console.log("hello world");
+var apiServerUrl = "https://9d0a6999.ngrok.io/customers";
 
 var service = sdk.service(function(err, service) {
-  console.log('I have a service')
   var dataLink = service.dataLink;   // gets the datalink object from the service
   var customers = dataLink.serviceObject('customersPaas');
 
@@ -27,135 +26,207 @@ var service = sdk.service(function(err, service) {
   customers.onDeleteAll(notImplementedHandler);
   customers.onDeleteByQuery(notImplementedHandler);
 
-  function list(request, complete) {
-    console.log("inside list");
-//    request(
-//      {
-//        method: 'GET',
-//        uri: format.outboundRequest(apiServerUrl, req)
-//      },
-//      function(error, response, body) {
-//        console.log(JSON.stringify(response));
-//        status == (error && error.status) || response.statusCode;
-//        if(error == null && status == 200) {
-//          body = JSON.parse(body);
-//          body.forEach(function(customer) {
-//            customer = formatResponse(customer);
-//          });
-          complete({"test":"response"}).ok().next();
-//        } else {
-//          console.log(error);
-//          complete(error).runtimeError().next();
-//        }
-//      }
-//    );
-  };
+  //TODO: won't deploy
+//  setupJsonServer();
 
-  function create(request, complete) {
-    console.log("inside create");
-    request(
-      {
-        method: 'POST',
-        uri: format.outboundRequest(apiServerUrl, req),
-        json: format.request(req.body)
-      },
-      function(error, response, body) {
-        console.log(JSON.stringify(response));
-        status == (error && error.status) || response.statusCode;
-        if(error == null && status == 201) {
-          complete(formatResponse(body)).ok().next();
-        } else {
-          console.log(error);
-          complete(error).runtimeError().next();
-        }
-      }
-    );
-  };
-
-  function show(request, complete) {
-    console.log("inside show");
-    request(
-      {
-        method: 'GET',
-        uri: format.outboundRequest(apiServerUrl, req)
-      },
-      function(error, response, body) {
-        console.log(JSON.stringify(response));
-        status == (error && error.status) || response.statusCode;
-        if(error == null && status == 200) {
-          body = JSON.parse(body);
-          complete(formatResponse(body)).ok().next();
-        } else {
-          console.log(error);
-          complete(error).runtimeError().next();
-        }
-      }
-    );
-  };
-
-  function update(request, complete) {
-    console.log("inside update");
-    req.body = format.request(req.body);
-    request(
-      {
-        method: 'PUT',
-        uri: format.outboundRequest(apiServerUrl, request),
-        json: req.body
-      },
-      function(error, response, body) {
-        console.log(JSON.stringify(response));
-        status == (error && error.status) || response.statusCode;
-        if(error == null && status == 200) {
-          res.send(formatResponse(body));
-        } else {
-          console.log(error);
-          complete(error).runtimeError().next();
-        }
-      }
-    );
-  };
-
-  function destroy(request, complete) {
-    console.log("inside destroy");
-    request(
-      {
-        method: 'DELETE',
-        uri: format.outboundRequest(apiServerUrl, request)
-      },
-      function(error, response, body) {
-        console.log(JSON.stringify(response));
-        status == (error && error.status) || response.statusCode;
-        if(error == null && status == 200) {
-          body = {"count":1};
-          res.status(200).send(body);
-        } else {
-          console.log(error);
-          complete(error).runtimeError().next();
-        }
-      }
-    );
-  };
-
-  function count(request, complete) {
-    console.log("inside count");
-    request(
-      {
-        method: 'GET',
-        uri: format.outboundRequest(apiServerUrl, request)
-      },
-      function(error, response, body) {
-        console.log(JSON.stringify(response));
-        status == (error && error.status) || response.statusCode;
-        if(error == null && status == 200) {
+  function list(req, complete) {
+    console.log("Query: ", req.query);
+    console.log("EntityId: ", req.entityId);
+    console.log("Body: ", req.body);
+    console.log("SeviceObjectName: ", req.serviceObjectName);
+    console.log("Method: ", req.method);
+    console.log("Headers: ", req.headers);
+    try {
+      request(
+        {
+          method: 'GET',
+          uri: format.outboundRequest(apiServerUrl, req)
+        },
+        function(error, response, body) {
+          var status = (error && error.status) || response.statusCode;
+          if(error == null && status == 200) {
             body = JSON.parse(body);
-            body = {"count": body.length};
-            complete(body).ok().next();
-        } else {
+            body.forEach(function(customer) {
+              customer = formatResponse(customer);
+            });
+            return complete(body).ok().next();
+          } else {
             console.log(error);
-            complete(error).runtimeError().next();
+            return complete(error).runtimeError().next();
           }
-      }
-    )
+        }
+      );
+    } catch (e) {
+      console.log(e.toString());
+      return complete(e.toString()).runtimeError().next();
+    }
+  };
+
+  function create(req, complete) {
+    console.log("Query: ", req.query);
+    console.log("EntityId: ", req.entityId);
+    console.log("Body: ", req.body);
+    console.log("SeviceObjectName: ", req.serviceObjectName);
+    console.log("Method: ", req.method);
+    console.log("Headers: ", req.headers);
+    try {
+      console.log("inside create");
+      request(
+        {
+          method: 'POST',
+          uri: format.outboundRequest(apiServerUrl, req),
+          json: format.request(req.body)
+        },
+        function(error, response, body) {
+          console.log(JSON.stringify(response));
+          var status = (error && error.status) || response.statusCode;
+          if(error == null && status == 201) {
+            return complete(formatResponse(body)).ok().next();
+          } else {
+            console.log(error);
+            return complete(error).runtimeError().next();
+          }
+        }
+      );
+    } catch (e) {
+      console.log(e.toString());
+      return complete(e.toString()).runtimeError().next();
+    }
+  };
+
+  function show(req, complete) {
+    console.log("Query: ", req.query);
+    console.log("EntityId: ", req.entityId);
+    console.log("Body: ", req.body);
+    console.log("SeviceObjectName: ", req.serviceObjectName);
+    console.log("Method: ", req.method);
+    console.log("Headers: ", req.headers);
+    try {
+      console.log("inside show");
+      request(
+        {
+          method: 'GET',
+          uri: format.outboundRequest(apiServerUrl, req)
+        },
+        function(error, response, body) {
+          console.log(JSON.stringify(response));
+          console.log(error);
+          console.log(body);
+          var status = (error && error.status) || response.statusCode;
+          if(error == null && status == 200) {
+            body = JSON.parse(body);
+            body = formatResponse(body);
+            return complete(body).ok().next();
+          } else {
+            console.log(error);
+            return complete(error).runtimeError().next();
+          }
+        }
+      );
+    } catch (e) {
+      console.log(e.toString());
+      return complete(e.toString()).runtimeError().next();
+    }
+  };
+
+  function update(req, complete) {
+    console.log("Query: ", req.query);
+    console.log("EntityId: ", req.entityId);
+    console.log("Body: ", req.body);
+    console.log("SeviceObjectName: ", req.serviceObjectName);
+    console.log("Method: ", req.method);
+    console.log("Headers: ", req.headers);
+    try {
+      console.log("inside update");
+      req.body = format.request(req.body);
+      request(
+        {
+          method: 'PUT',
+          uri: format.outboundRequest(apiServerUrl, req),
+          json: req.body
+        },
+        function(error, response, body) {
+          console.log(JSON.stringify(response));
+          var status = (error && error.status) || response.statusCode;
+          if(error == null && status == 200) {
+            res.send(formatResponse(body));
+          } else {
+            console.log(error);
+            return complete(error).runtimeError().next();
+          }
+        }
+      );
+    } catch (e) {
+      console.log(e.toString());
+      return complete(e.toString()).runtimeError().next();
+    }
+  };
+
+  function destroy(req, complete) {
+    console.log("Query: ", req.query);
+    console.log("EntityId: ", req.entityId);
+    console.log("Body: ", req.body);
+    console.log("SeviceObjectName: ", req.serviceObjectName);
+    console.log("Method: ", req.method);
+    console.log("Headers: ", req.headers);
+    try {
+      console.log("inside destroy");
+      request(
+        {
+          method: 'DELETE',
+          uri: format.outboundRequest(apiServerUrl, req)
+        },
+        function(error, response, body) {
+          console.log(JSON.stringify(response));
+          var status = (error && error.status) || response.statusCode;
+          if(error == null && status == 200) {
+            body = {"count":1};
+            res.status(200).send(body);
+          } else {
+            console.log(error);
+            return complete(error).runtimeError().next();
+          }
+        }
+      );
+    } catch (e) {
+      console.log(e.toString());
+      return complete(e.toString()).runtimeError().next();
+    }
+  };
+
+  function count(req, complete) {
+    console.log("Query: ", req.query);
+    console.log("EntityId: ", req.entityId);
+    console.log("Body: ", req.body);
+    console.log("SeviceObjectName: ", req.serviceObjectName);
+    console.log("Method: ", req.method);
+    console.log("Headers: ", req.headers);
+    try {
+      console.log("inside count");
+      request(
+        {
+          method: 'GET',
+          uri: format.outboundRequest(apiServerUrl, req)
+        },
+        function(error, response, body) {
+          console.log(JSON.stringify(response));
+          console.log(error);
+          console.log(body);
+          var status = (error && error.status) || response.statusCode;
+          if(error == null && status == 200) {
+              body = JSON.parse(body);
+              body = {"count": body.length};
+              return complete(body).ok().next();
+          } else {
+              console.log(error);
+              return complete(error).runtimeError().next();
+            }
+        }
+      );
+    } catch (e) {
+      console.log(e.toString());
+      return complete(e.toString()).runtimeError().next();
+    }
   }
 
   function formatResponse(body) {
@@ -169,8 +240,16 @@ var service = sdk.service(function(err, service) {
     return body;
   }
 
-  var notImplementedHandler = function(request, complete) {
-    complete("These methods are not implemented").notImplemented().done();
+  var notImplementedHandler = function(req, complete) {
+    return complete("These methods are not implemented").notImplemented().done();
   };
 
 });
+
+var setupJsonServer = function() {
+  var router = jsonServer.router('db.json') // Express router
+  var server = jsonServer.create()       // Express server
+
+  server.use(router)
+  server.listen(3000)
+}
