@@ -96,6 +96,7 @@ app.use('/', healthCheck);
 app.use('/customers', customers);
 //TODO: LAB: add partner route support
 app.use('/partner', partner);
+app.use('/auth', auth);
 //Additional route(s) for other Kiney collections can be added as needed:
 //app.use('/other-collection', other-collection);
 
