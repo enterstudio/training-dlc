@@ -12,7 +12,6 @@ router.route('/').post(auth); // POST {alc_url}
 function auth(req, res, next) {
   //TODO: build the request body to the external auth
   //request comes in as {username: <string>,password: <string>}
-  var body = format.request(req.body);
     //TODO: uncomment when real auth Server will be used
   //request(
   //  {
@@ -40,8 +39,17 @@ function auth(req, res, next) {
   //    }
   //  }
   //);
-    var resultBody = {authenticated: true,token: ""};
-    res.send(resultBody)
+  var body = format.request(req.body),
+      requiredUsername = "custom",
+      requiredPassword = "1234";
+
+  var resultBody = {};
+  if(body.username == requiredUsername&& body.password == requiredPassword){
+    resultBody = {authenticated: true,token: ""};
+  }else{
+    res.status(401);
+  }
+  res.send(resultBody)
 }
 
 module.exports = router;
