@@ -63,11 +63,12 @@ function list(req, res, next) {
  * Receives a JSON body of the object to create and sends back success 200
  */
 function create(req, res, next) {
+  req.body = format.request(req.body);
   request(
     {
       method: 'POST',
       uri: format.outboundRequest(apiServerUrl, req),
-      json: format.request(req.body)
+      json: formatRequest(req.body)
     },
     function(error, response, body) {
       res.status((error && error.status) || response.statusCode);
@@ -118,7 +119,7 @@ function update(req, res, next) {
       method: 'PUT',
       uri: format.outboundRequest(apiServerUrl, req),
       //translate the JSON body into a format the external data can update
-      json: req.body
+      json: formatRequest(req.body)
     },
     function(error, response, body) {
       res.status((error && error.status) || response.statusCode);
@@ -211,6 +212,17 @@ function formatResponse(body) {
   delete body.company;
 
   return body;
+}
+
+function formatRequest(body) {
+    body.company = body.company ? body.company : {};
+    body.company.name = body.company.name ? body.company.name : body.partnercompany;
+    delete body.partnercompany;
+
+    body.name = body.name ? body.name : body.partnername;
+    delete body.partnername;
+
+    return body;
 }
 
 module.exports = router;
