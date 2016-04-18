@@ -27,6 +27,7 @@ router.route('/:id')
  */
 function list(req, res, next) {
   //Convert the query to a format that the custom data source expects
+  req.query = formatQuery(req.query);
   format.parseQuery(req);
  /*
   * Create an external API request that matches your custom data source's
@@ -223,6 +224,26 @@ function formatRequest(body) {
     delete body.partnername;
 
     return body;
+}
+
+function formatQuery(query){
+    if(query.query == null) {
+        return;
+    }
+
+    var parsedQuery = JSON.parse(query.query);
+    if(parsedQuery["partnername"]){
+        parsedQuery["name"] = parsedQuery["partnername"];
+        delete parsedQuery["partnername"];
+    }
+
+    if(parsedQuery["partnercompany"]) {
+        parsedQuery["company.name"] = parsedQuery["partnercompany"];
+        delete parsedQuery["partnercompany"];
+    }
+
+    query.query = JSON.stringify(parsedQuery);
+    return query;
 }
 
 module.exports = router;
