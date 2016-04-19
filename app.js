@@ -90,7 +90,6 @@ app.use(function (req, res, next) {
 //Health check in point for DLC service monitoring
 app.use('/', healthCheck);
 //A route for a single collection that contains all necessary CRUD operations
-//TODO: vmwus1
 //baas.kinvey.com/appdata/{kid}/{collection} ==> {dlc_url}/{collection}
 //baas.kinvey.com/appdata/{kid}/{collection}/{id} ==> {dlc_url}/{collection}/{id}
 app.use('/customers', customers);

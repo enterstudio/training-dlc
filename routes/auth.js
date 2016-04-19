@@ -26,7 +26,7 @@ function auth(req, res, next) {
   //  function(error, response, body) {
   //    res.status((error && error.status) || response.statusCode);
   //    if(error == null) {
-  //      //TODO: resonse must be in a form Kinvey recognizes
+  //      //TODO: response must be in a form Kinvey recognizes
   //      //{authenticated: true,token: ""}
   //      //response body must be utf-8 encoded
   //      //content-type must be set to application/json

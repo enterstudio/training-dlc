@@ -27,7 +27,7 @@ router.route('/:id')
  */
 function list(req, res, next) {
   //Convert the query to a format that the custom data source expects
-  req.query = formatQuery(req.query);
+  req.query = formatPartnerQuery(req.query);
   format.parseQuery(req);
  /*
   * Create an external API request that matches your custom data source's
@@ -69,7 +69,7 @@ function create(req, res, next) {
     {
       method: 'POST',
       uri: format.outboundRequest(apiServerUrl, req),
-      json: formatRequest(req.body)
+      json: formatPartnerRequest(req.body)
     },
     function(error, response, body) {
       res.status((error && error.status) || response.statusCode);
@@ -120,7 +120,7 @@ function update(req, res, next) {
       method: 'PUT',
       uri: format.outboundRequest(apiServerUrl, req),
       //translate the JSON body into a format the external data can update
-      json: formatRequest(req.body)
+      json: formatPartnerRequest(req.body)
     },
     function(error, response, body) {
       res.status((error && error.status) || response.statusCode);
@@ -215,7 +215,7 @@ function formatResponse(body) {
   return body;
 }
 
-function formatRequest(body) {
+function formatPartnerRequest(body) {
     body.company = body.company ? body.company : {};
     body.company.name = body.company.name ? body.company.name : body.partnercompany;
     delete body.partnercompany;
@@ -226,7 +226,7 @@ function formatRequest(body) {
     return body;
 }
 
-function formatQuery(query){
+function formatPartnerQuery(query){
     if(query.query == null) {
         return;
     }
