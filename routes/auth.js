@@ -20,23 +20,26 @@ function auth(req, res, next) {
   //    //translate the JSON body into a format the external data can save
   //    json: body,
   //    options: {
-  //      //TODO: add necessary headers
+  //      //TODO: add necessary headers (if any)
   //    }
   //  },
   //  function(error, response, body) {
-  //    res.status((error && error.status) || response.statusCode);
+  //    console.log("response status: " + response.statusCode);
+  //    var responseBody = {};
   //    if(error == null) {
   //      //TODO: response must be in a form Kinvey recognizes
-  //      //{authenticated: true,token: ""}
   //      //response body must be utf-8 encoded
   //      //content-type must be set to application/json
   //      //token must be a Base64 encoded string. It string should include all enterprise tokens.
-  //      res.send(body);
+  //      var session = new Buffer(token).toString('base64');
+  //      responseBody = {authenticated: true,token: session}
+  //      res.status(200);
   //    } else {
   //      console.log(error);
   //      //send a 401 unauthorized with no response body
-  //      res.send({});
+  //      res.status(401);
   //    }
+  //    res.send(responseBody);
   //  }
   //);
   var body = format.request(req.body),
