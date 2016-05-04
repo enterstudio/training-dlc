@@ -2,6 +2,14 @@
 
 A sample DLC connecting from Kinvey to a custom data source.
 
+### Getting started
+* git clone git@github.com:KinveyClientServices/training-dlc.git
+* git checkout release/{your_team_name}
+* npm install
+* npm start
+* ngrok http 4000
+* Create a DLC configuration in the Kinvey Console for the forwarding url (https://console.kinvey.com)
+
 DLC runs on port 3001
 
 In this case the custom data source is json-server which hosts a json format db on port 3000.
