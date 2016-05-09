@@ -2,6 +2,13 @@
 
 A sample DLC connecting from Kinvey to a custom data source.
 
+### Prerequisites
+**Please complete this prior to your Kinvey training class**
+
+* Make sure that you have nodejs installed https://nodejs.org/en/
+* Install git cli: https://git-scm.com/downloads
+* Install ngrok: https://ngrok.com/
+
 ### Getting started
 * git clone git@github.com:KinveyClientServices/training-dlc.git
 * git checkout release/{your_team_name}
