@@ -47,10 +47,10 @@ function auth(req, res, next) {
       requiredPassword = "1234";
 
   var resultBody = {};
-  if(body.username == requiredUsername&& body.password == requiredPassword){
-    resultBody = {authenticated: true,token: ""};
+  if(body.username == requiredUsername && body.password == requiredPassword){
+    //TODO: LAB: return the body needed by MIC
   }else{
-    res.status(401);
+    //TODO: LAB: return a valid error response to MIC
   }
   res.send(resultBody)
 }
