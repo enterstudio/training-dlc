@@ -36,15 +36,12 @@ function list(req, res, next) {
   */
   request(
     {
-      method: 'GET',
-      uri: format.outboundRequest(apiServerUrl, req)
+      //TODO: LAB: make the external API request
     },
     function(error, response, body) {
-      //set the DLC response status code to the custom data source
-      res.status((error && error.status) || response.statusCode);
+      //TODO: LAB: set the DLC response status code to the custom data source
       if(error == null && res.statusCode == 200) {
         //on success convert to the correct format and respond
-        body = JSON.parse(body);
         body.forEach(function(partner) {
           partner = formatResponse(partner);
         });
@@ -67,12 +64,10 @@ function create(req, res, next) {
   req.body = format.request(req.body);
   request(
     {
-      method: 'POST',
-      uri: format.outboundRequest(apiServerUrl, req),
-      json: formatPartnerRequest(req.body)
+      //TODO: LAB: make the external API request
     },
     function(error, response, body) {
-      res.status((error && error.status) || response.statusCode);
+      //TODO: LAB: set the DLC response status code to the custom data source
       if(error == null && res.statusCode == 201) {
           res.send(formatResponse(body));
       } else {
@@ -91,13 +86,11 @@ function create(req, res, next) {
 function show(req, res, next) {
   request(
     {
-      method: 'GET',
-      uri: format.outboundRequest(apiServerUrl, req)
+      //TODO: LAB: make the external API request
     },
     function(error, response, body) {
-      res.status((error && error.status) || response.statusCode);
+      //TODO: LAB: set the DLC response status code to the custom data source
       if(error == null && res.statusCode == 200) {
-        body = JSON.parse(body);
         res.send(formatResponse(body));
       } else {
         console.log(error);
@@ -117,13 +110,10 @@ function update(req, res, next) {
   req.body = format.request(req.body);
   request(
     {
-      method: 'PUT',
-      uri: format.outboundRequest(apiServerUrl, req),
-      //translate the JSON body into a format the external data can update
-      json: formatPartnerRequest(req.body)
+      //TODO: LAB: make the external API request
     },
     function(error, response, body) {
-      res.status((error && error.status) || response.statusCode);
+      //TODO: LAB: set the DLC response status code to the custom data source
       if(error == null && res.statusCode == 200) {
           res.send(body);
       } else {
@@ -142,16 +132,13 @@ function update(req, res, next) {
 function destroy(req, res, next) {
 	request(
     {
-      method: 'DELETE',
-      uri: format.outboundRequest(apiServerUrl, req)
+      //TODO: LAB: make the external API request
     },
     function(error, response, body) {
-      res.status((error && error.status) || response.statusCode);
+      //TODO: LAB: set the DLC response status code to the custom data source
       if(error == null && res.statusCode == 200) {
-        //body contains a count of the number of records deleted
-        body = {"count":1};
-        // DELETE response should be a 200 so the request body is visible
-        res.status(200).send(body);
+        //TODO: LAB: body contains a count of the number of records deleted
+        //TODO: LAB: DELETE response should be a 200 so the request body is visible
       } else {
         console.log(error);
         res.send(body);
@@ -168,15 +155,12 @@ function destroy(req, res, next) {
 function count(req, res, next) {
   request(
     {
-      method: 'GET',
-      uri: format.outboundRequest(apiServerUrl, req)
+      //TODO: LAB: make the external API request
     },
     function(error, response, body) {
       res.status((error && error.status) || response.statusCode);
       if(error == null && res.statusCode == 200) {
           //TODO: LAB: Response format is {"count":150}
-          body = JSON.parse(body);
-          body = {"count": body.length};
           res.send(body);
       } else {
           console.log(error);
@@ -198,32 +182,13 @@ function count(req, res, next) {
  */
 function formatResponse(body) {
   //TODO: LAB: send back the correct id format to Kinvey
-  body._id = body.id.toString();
-  delete body.id;
   //TODO: LAB: send back the correct time format to Kinvey
-  body._kmd = {"ect":body.created_time, "lmt":body.last_modified_time};
-  delete body.created_time;
-  delete body.last_modified_time;
   //TODO: LAB: send back the correct acl format to Kinvey
-  body._acl = {};
-  //Field names are updated to match the expected format of the mobile app
-  body.partnername = body.name;
-  delete body.name;
-  body.partnercompany = body.company ? body.company.name : "";
-  delete body.company;
-
-  return body;
 }
 
 function formatPartnerRequest(body) {
-    body.company = body.company ? body.company : {};
-    body.company.name = body.company.name ? body.company.name : body.partnercompany;
-    delete body.partnercompany;
-
-    body.name = body.name ? body.name : body.partnername;
-    delete body.partnername;
-
-    return body;
+    //TODO: LAB: format the partnercompany parameter
+    //TODO: LAB: format the partnername parameter
 }
 
 function formatPartnerQuery(query){
