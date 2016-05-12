@@ -69,7 +69,7 @@ function create(req, res, next) {
     {
       method: 'POST',
       uri: format.outboundRequest(apiServerUrl, req),
-      json: formatPartnerRequest(req.body)
+      json: formatPostPartnerRequest(req.body)
     },
     function(error, response, body) {
       res.status((error && error.status) || response.statusCode);
@@ -115,23 +115,25 @@ function show(req, res, next) {
  */
 function update(req, res, next) {
   req.body = format.request(req.body);
-  request(
-    {
-      method: 'PUT',
-      uri: format.outboundRequest(apiServerUrl, req),
-      //translate the JSON body into a format the external data can update
-      json: formatPartnerRequest(req.body)
-    },
-    function(error, response, body) {
-      res.status((error && error.status) || response.statusCode);
-      if(error == null && res.statusCode == 200) {
+  formatPutPartnerRequest(req.body, req.params.id, function (body) {
+    request(
+      {
+        method: 'PUT',
+        uri: format.outboundRequest(apiServerUrl, req),
+        //translate the JSON body into a format the external data can update
+        json: body
+      },
+      function (error, response, body) {
+        res.status((error && error.status) || response.statusCode);
+        if (error == null && res.statusCode == 200) {
           res.send(body);
-      } else {
+        } else {
           console.log(error);
           res.send(body);
+        }
       }
-    }
-  );
+    );
+  })
 };
 
 /*
@@ -215,10 +217,10 @@ function formatResponse(body) {
   return body;
 }
 
-function formatPartnerRequest(body) {
-    body.company = body.company ? body.company : {};
-    body.company.name = body.company.name ? body.company.name : body.partnercompany;
-    delete body.partnercompany;
+function formatPostPartnerRequest(body) {
+  body.company = body.company ? body.company : {};
+  body.company.name = body.company.name ? body.company.name : body.partnercompany;
+  delete body.partnercompany;
 
     body.name = body.name ? body.name : body.partnername;
     delete body.partnername;
@@ -226,7 +228,42 @@ function formatPartnerRequest(body) {
     return body;
 }
 
-function formatPartnerQuery(query){
+function formatPutPartnerRequest(body, id, cb) {
+
+  getPartnerById(id, function (partner) {
+    body.company = body.company ? body.company : {};
+    if (partner.company && partner.company.name) {
+      body.company = partner.company;
+    } else {
+      body.company.name = body.partnercompany;
+    }
+    delete body.partnercompany;
+
+    body.name = body.name ? body.name : body.partnername;
+    delete body.partnername;
+
+    return cb(body);
+  });
+
+  function getPartnerById(id, cb) {
+    var req = {
+      "params": {
+        "id": id
+      }
+    };
+    request(
+      {
+        method: 'GET',
+        uri: format.outboundRequest(apiServerUrl, req)
+      },
+      function (error, response, body) {
+        return cb(JSON.parse(body));
+      }
+    );
+  }
+}
+
+function formatPartnerQuery(query) {
     if(query.query == null) {
         return;
     }
