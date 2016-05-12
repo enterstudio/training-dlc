@@ -70,6 +70,8 @@ function create(req, res, next) {
   req.body = format.request(req.body);
   request(
     {
+      //TODO: LAB: use npm request to make the external api request
+      // https://github.com/request/request#requestoptions-callback
       method: 'POST',
       uri: format.outboundRequest(apiServerUrl, req),
       json: formatPartnerRequest(req.body)
@@ -203,28 +205,29 @@ function count(req, res, next) {
  * Fields names must be converted to match Kinvey standards.
  */
 function formatResponse(body) {
-  //TODO: LAB: send back the correct id format to Kinvey
-  body._id = body.id.toString();
-  delete body.id;
-  //TODO: LAB: send back the correct time format to Kinvey
-  body._kmd = {"ect":body.created_time, "lmt":body.last_modified_time};
-  delete body.created_time;
-  delete body.last_modified_time;
-  //TODO: LAB: send back the correct acl format to Kinvey
-  body._acl = {};
-  //Field names are updated to match the expected format of the mobile app
-  body.partnername = body.name;
-  delete body.name;
-  body.partnercompany = body.company ? body.company.name : "";
-  delete body.company;
+    //TODO: LAB: send back the correct id format to Kinvey
+    body._id = body.id.toString();
+    delete body.id;
+    //TODO: LAB: send back the correct time format to Kinvey
+    body._kmd = {"ect":body.created_time, "lmt":body.last_modified_time};
+    delete body.created_time;
+    delete body.last_modified_time;
+    //TODO: LAB: send back the correct acl format to Kinvey
+    body._acl = {};
+    //Field names are updated to match the expected format of the mobile app
+    body.partnername = body.name;
+    delete body.name;
+    body.partnercompany = body.company ? body.company.name : "";
+    delete body.company;
 
-  return body;
+    return body;
 }
 
 function formatPartnerRequest(body) {
-  body.company = body.company ? body.company : {};
-  body.company.name = body.company.name ? body.company.name : body.partnercompany;
-  delete body.partnercompany;
+    //TODO: LAB: send the correct parameters to the database
+    body.company = body.company ? body.company : {};
+    body.company.name = body.company.name ? body.company.name : body.partnercompany;
+    delete body.partnercompany;
 
     body.name = body.name ? body.name : body.partnername;
     delete body.partnername;

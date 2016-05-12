@@ -47,9 +47,12 @@ function auth(req, res, next) {
       requiredPassword = "1234";
 
   var resultBody = {};
-  if(body.username == requiredUsername&& body.password == requiredPassword){
+  if(body.username == requiredUsername && body.password == requiredPassword) {
+    //TODO: LAB: Send a successful authentication body back
+    var session = new Buffer("enterprisetoken").toString('base64');
     resultBody = {authenticated: true,token: ""};
-  }else{
+  } else {
+    //TODO: LAB: send an error response back
     res.status(401);
   }
   res.send(resultBody)
