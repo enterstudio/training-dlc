@@ -30,6 +30,15 @@ REST endpoints for a customers collection are provided
 
 The goal of this training is to demonstrate how to convert Kinvey requests into an external source and vice versa.
 
+### Data Model
+* Partner
+  * name => partnername
+  * company => partnercompany
+  * email => partneremail //v2
+* Customers
+  * name
+  * secret_identity
+
 ### Topics
 * Where do the requests come from?
 * What endpoints do I need?
