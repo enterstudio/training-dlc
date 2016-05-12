@@ -37,6 +37,8 @@ function list(req, res, next) {
   */
   request(
     {
+      //TODO: LAB: use npm request to make the external api request
+      // https://github.com/request/request#requestoptions-callback
       method: 'GET',
       uri: format.outboundRequest(apiServerUrl, req)
     },
