@@ -1,4 +1,4 @@
-function onPostSave(request, response, modules) {
+function onPreSave(request, response, modules) {
     var logger = modules.logger,
         collectionAccess = modules.collectionAccess;
 

@@ -2,6 +2,7 @@ var express = require("express");
 var request = require("request");
 
 var format = require('../lib/formatting');
+var conflictResolver = require('../lib/conflictResolver');
 
 var router = express.Router();
 //Url for the external data source.
@@ -73,7 +74,7 @@ function create(req, res, next) {
       // https://github.com/request/request#requestoptions-callback
       method: 'POST',
       uri: format.outboundRequest(apiServerUrl, req),
-      json: formatPostPartnerRequest(req.body)
+      json: formatPartnerRequest(req.body)
     },
     function(error, response, body) {
       res.status((error && error.status) || response.statusCode);
@@ -119,7 +120,8 @@ function show(req, res, next) {
  */
 function update(req, res, next) {
   req.body = format.request(req.body);
-  formatPutPartnerRequest(req.body, req.params.id, function (body) {
+  req.body = formatPartnerRequest(req.body);
+  conflictResolver.resolvePartnerCompanyNameConflict(req.body, req.params.id, apiServerUrl, function (body) {
     request(
       {
         method: 'PUT',
@@ -221,7 +223,7 @@ function formatResponse(body) {
     return body;
 }
 
-function formatPostPartnerRequest(body) {
+function formatPartnerRequest(body) {
     //TODO: LAB: send the correct parameters to the database
     body.company = body.company ? body.company : {};
     body.company.name = body.company.name ? body.company.name : body.partnercompany;
@@ -231,41 +233,6 @@ function formatPostPartnerRequest(body) {
     delete body.partnername;
 
     return body;
-}
-
-function formatPutPartnerRequest(body, id, cb) {
-
-  getPartnerById(id, function (partner) {
-    body.company = body.company ? body.company : {};
-    if (partner.company && partner.company.name) {
-      body.company = partner.company;
-    } else {
-      body.company.name = body.partnercompany;
-    }
-    delete body.partnercompany;
-
-    body.name = body.name ? body.name : body.partnername;
-    delete body.partnername;
-
-    return cb(body);
-  });
-
-  function getPartnerById(id, cb) {
-    var req = {
-      "params": {
-        "id": id
-      }
-    };
-    request(
-      {
-        method: 'GET',
-        uri: format.outboundRequest(apiServerUrl, req)
-      },
-      function (error, response, body) {
-        return cb(JSON.parse(body));
-      }
-    );
-  }
 }
 
 function formatPartnerQuery(query) {
