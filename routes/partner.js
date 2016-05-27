@@ -1,5 +1,6 @@
 var express = require("express");
 var request = require("request");
+var pg = require("pg");
 
 var format = require('../lib/formatting');
 var conflictResolver = require('../lib/conflictResolver');
@@ -94,22 +95,40 @@ function create(req, res, next) {
  * Receives an id parameter and sends back a single post object
  */
 function show(req, res, next) {
-  request(
-    {
-      method: 'GET',
-      uri: format.outboundRequest(apiServerUrl, req)
-    },
-    function(error, response, body) {
-      res.status((error && error.status) || response.statusCode);
-      if(error == null && res.statusCode == 200) {
-        body = JSON.parse(body);
-        res.send(formatResponse(body));
-      } else {
-        console.log(error);
-        res.send(body);
-      }
-    }
-  );
+    var conString = "postgres://:@/";
+
+    var client = new pg.Client({
+        user: "username",
+        password: "password",
+        database: "dbname",
+        port: 5432,
+        host: "host",
+        ssl: true
+    });
+    client.connect(function(err) {
+        if(err) {
+            return console.error('could not connect to postgres', err);
+        }
+        client.query('SELECT * FROM task WHERE id = ' + req.params.id, function(err, result) {
+            if(err) {
+                return console.error('error running query', err);
+            }
+            console.log("hello " + JSON.stringify(result.rows[0]));
+            client.end();
+            var task = result.rows[0];
+            task._id = task.id;
+            delete task.id;
+            task.partnername = task.name;
+            delete task.name;
+            task.partnercompany = "Kinvey";
+            task._kmd = {}
+            task._kmd["ect"] = task.created_at;
+            task._kmd["lmt"] = task.updated_at;
+            delete task.created_at;
+            delete task.updated_at;
+            res.send(task);
+        });
+    })
 };
 
 /*
