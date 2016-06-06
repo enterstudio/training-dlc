@@ -38,16 +38,17 @@ function onPostSave(request, response, modules) {
             var newFields = {
                 workOrderCount: workOrderCount
             };
+            logger.info("Adding WorkOrder count to " + employee.name);
             collectionAccess.collection("Employees").update({"_id": collectionAccess.objectID(employeeId)}, {"$set": newFields}, {}, function (err, results) {
-                return callback(err, workOrderCount);
+                return callback(err, employee.name, workOrderCount);
             });
         }
     }
 
-    function sendPush(workOrderCount, callback) {
-        if (workOrderCount && workOrderCount % 10 == 0) {
+    function sendPush(name, workOrderCount, callback) {
+        if (workOrderCount && workOrderCount % 10 === 0) {
             var userId = requestContext.getAuthenticatedUserId(),
-                text = "Your order count value is " + workOrderCount + " now";
+                text = "Employee " + name + " has " + workOrderCount + " work orders now";
             sendPushNotification(userId, text, function (err) {
                 return callback(err);
             });
@@ -84,7 +85,7 @@ function onPostSave(request, response, modules) {
                         return callback("User with id " + userId + " wasn't found");
                     }
                     return callback(err, count, notification, user);
-                })
+                });
             };
 
             var sendPayload = function (count, notification, user, callback) {
@@ -106,14 +107,13 @@ function onPostSave(request, response, modules) {
                     "user_id": userId
                 };
 
+                logger.info("Sending a push notification to " + user.username + " with text: " + text);
                 var pushPayload = push.sendPayload(user, iOSAps, iOSExtras, androidPayload);
-                logger.info("Push Response: " + JSON.stringify(pushPayload));
 
                 return callback();
             };
 
-            async.waterfall([saveNotificationInCollection, getUnreadNotificationsCount, getUser, sendPayload], callback)
+            async.waterfall([saveNotificationInCollection, getUnreadNotificationsCount, getUser, sendPayload], callback);
         }
     }
-
 }
