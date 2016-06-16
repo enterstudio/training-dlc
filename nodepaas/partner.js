@@ -3,7 +3,7 @@ var mysql = require('mysql');
 
 var service = sdk.service(function(err, service) {
   var dataLink = service.dataLink;   // gets the datalink object from the service
-  var partner = dataLink.serviceObject('partner');
+  var partner = dataLink.serviceObject('Partner');
 
   if(err != null) {
     console.log(JSON.stringify(err));
@@ -100,9 +100,5 @@ var service = sdk.service(function(err, service) {
     console.log("SeviceObjectName: ", req.serviceObjectName);
     console.log("Method: ", req.method);
     console.log("Headers: ", req.headers);
-  }
-
-  var notImplementedHandler = function(req, complete) {
-    return complete("These methods are not implemented").notImplemented().done();
   }
 })
