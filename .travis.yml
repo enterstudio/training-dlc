@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- '6'
+- 6.0
 install:
 - npm install
 deploy:
@@ -8,7 +8,7 @@ deploy:
   access_key_id:
     secure: Il+dcSmd2X8oikfLaFwTfkzM+ssDTxP4EG5udgZDxGDY7bNiZiDIV0OP49spl5c5JVxb67OnOl3RQOR3Ajgun1V4kOr7BDgAsM2wMs8FWYPchfGXXIXEcq7GYuFSFzDEzDBDUQ9AQTRJR9FLNXl9xJv8EvAA1IE0ovz9aMuXomM=
   secret_access_key:
-    secure: secure: SG5/IiItePA5DpJnW77c3q/FtHY6gxM++AOluE4rwIKdAv9b9bQBcwn5oZD4WBb/LvYjY9mNZvUPSoFoIaYuQO1t/3PIciEmaeS6BViyzJ3SYGMaSPmVKqR6c+QtgJo3Wvci4Nfyqi47E8AlImdMuGVmCIXbka2NCwpBjYCrHHU=
+    secure: SG5/IiItePA5DpJnW77c3q/FtHY6gxM++AOluE4rwIKdAv9b9bQBcwn5oZD4WBb/LvYjY9mNZvUPSoFoIaYuQO1t/3PIciEmaeS6BViyzJ3SYGMaSPmVKqR6c+QtgJo3Wvci4Nfyqi47E8AlImdMuGVmCIXbka2NCwpBjYCrHHU=
   region: us-east-1
   app: training-dlc
   env: trainingDlc-env
