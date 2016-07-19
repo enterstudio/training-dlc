@@ -14,5 +14,5 @@ deploy:
   env: trainingDlc-env
   bucket_name: elasticbeanstalk-us-east-1-608492894188
   on:
-    repo: training-dlc
+    repo: KinveyClientServices/training-dlc
     branch: develop
