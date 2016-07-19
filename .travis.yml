@@ -3,15 +3,18 @@ node_js:
 - 6.0
 install:
 - npm install
+before_deploy:
+- make
 deploy:
   provider: elasticbeanstalk
   access_key_id:
-    secure: Il+dcSmd2X8oikfLaFwTfkzM+ssDTxP4EG5udgZDxGDY7bNiZiDIV0OP49spl5c5JVxb67OnOl3RQOR3Ajgun1V4kOr7BDgAsM2wMs8FWYPchfGXXIXEcq7GYuFSFzDEzDBDUQ9AQTRJR9FLNXl9xJv8EvAA1IE0ovz9aMuXomM=
+    secure: a0Z53idgExsZ39zIYXjVLL9R8YWLoc490J72/0Q85WisQYsJw8uz/5vsPydaVdKJOs3VFTbW0VeS/R60Z38GkwimFabXDMY8NT2WN1MwqQDlUIbuEIR+bqSLhn/QghXz8iG7yOUoKCwEVrUYC8dxNkgYB/Ni8b4mOZqPGr3jxtg=
   secret_access_key:
-    secure: SG5/IiItePA5DpJnW77c3q/FtHY6gxM++AOluE4rwIKdAv9b9bQBcwn5oZD4WBb/LvYjY9mNZvUPSoFoIaYuQO1t/3PIciEmaeS6BViyzJ3SYGMaSPmVKqR6c+QtgJo3Wvci4Nfyqi47E8AlImdMuGVmCIXbka2NCwpBjYCrHHU=
+    secure: alGEyPelLKmVOKBMF8K8rm9CX5DjhoByYTTht9P1DkRFDK1a9EoqeKhQlbuxvR8PwCca2cJQtDNWLvriqkwAi+tmjf5brz4bObyEANuK/XxuSftRL/ahzjjkR3SwL/aIYvN74RUQDluFu2LrhN4hoaex2Ni7dAXVaPDAGJmpp1I=
   region: us-east-1
   app: training-dlc
   env: trainingDlc-env
+  zip_file: training-dlc.zip
   bucket_name: elasticbeanstalk-us-east-1-608492894188
   on:
     repo: KinveyClientServices/training-dlc
