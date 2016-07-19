@@ -15,4 +15,4 @@ deploy:
   bucket_name: elasticbeanstalk-us-east-1-608492894188
   on:
     repo: KinveyClientServices/training-dlc
-    branch: develop
+    branch: feature/travis
