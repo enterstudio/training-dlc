@@ -7,6 +7,10 @@ before_deploy:
 - make
 deploy:
 - provider: elasticbeanstalk
+  access_key_id:
+  - secure: MSOesxlCtxwAGgpy5f/JxJ0A1gzOPou1sMlxpM7qwUTH6s0HtX8s5lSjIGhnd+3O8sMLaRhFxR5qpwUdW33WXdOwPnulN8k7bRPNNxyNdaw1dZf7a/iYykcRdvKsuMUc7xjx+qoGBnl05gdaYRHiFI0vva8kEdXMHgEGljZThP4=
+  secret_access_key:
+  - secure: F88flL1AuRTY4ryn73MAfBADthLzXiK02aXxbPHFIKH7UvMbo2MKY1nYTwV/gODJbKHBorpa09d7XFOnhnuTvJ13WHWWxyrchoz/FSCmOKXuucDRzX4+xOFCS46tTU4CoXFr7gqCsWn5k/ZaPwaaIXJ2Ec4B/lFhLsaCLMnwkRc=
   region: us-east-1
   app: training-dlc
   env: trainingDlc-env
@@ -15,7 +19,3 @@ deploy:
   on:
     repo: KinveyClientServices/training-dlc
     branch: feature/travis
-env:
-  global:
-  - secure: MSOesxlCtxwAGgpy5f/JxJ0A1gzOPou1sMlxpM7qwUTH6s0HtX8s5lSjIGhnd+3O8sMLaRhFxR5qpwUdW33WXdOwPnulN8k7bRPNNxyNdaw1dZf7a/iYykcRdvKsuMUc7xjx+qoGBnl05gdaYRHiFI0vva8kEdXMHgEGljZThP4=
-  - secure: F88flL1AuRTY4ryn73MAfBADthLzXiK02aXxbPHFIKH7UvMbo2MKY1nYTwV/gODJbKHBorpa09d7XFOnhnuTvJ13WHWWxyrchoz/FSCmOKXuucDRzX4+xOFCS46tTU4CoXFr7gqCsWn5k/ZaPwaaIXJ2Ec4B/lFhLsaCLMnwkRc=
