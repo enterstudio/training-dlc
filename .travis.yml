@@ -6,16 +6,16 @@ install:
 before_deploy:
 - make
 deploy:
-  provider: elasticbeanstalk
-  access_key_id:
-    secure: a0Z53idgExsZ39zIYXjVLL9R8YWLoc490J72/0Q85WisQYsJw8uz/5vsPydaVdKJOs3VFTbW0VeS/R60Z38GkwimFabXDMY8NT2WN1MwqQDlUIbuEIR+bqSLhn/QghXz8iG7yOUoKCwEVrUYC8dxNkgYB/Ni8b4mOZqPGr3jxtg=
-  secret_access_key:
-    secure: alGEyPelLKmVOKBMF8K8rm9CX5DjhoByYTTht9P1DkRFDK1a9EoqeKhQlbuxvR8PwCca2cJQtDNWLvriqkwAi+tmjf5brz4bObyEANuK/XxuSftRL/ahzjjkR3SwL/aIYvN74RUQDluFu2LrhN4hoaex2Ni7dAXVaPDAGJmpp1I=
-  region: us-east-1
-  app: training-dlc
-  env: trainingDlc-env
-  zip_file: training-dlc.zip
-  bucket_name: elasticbeanstalk-us-east-1-608492894188
-  on:
-    repo: KinveyClientServices/training-dlc
-    branch: feature/travis
+  - provider: elasticbeanstalk
+    access_key_id:
+      secure: a0Z53idgExsZ39zIYXjVLL9R8YWLoc490J72/0Q85WisQYsJw8uz/5vsPydaVdKJOs3VFTbW0VeS/R60Z38GkwimFabXDMY8NT2WN1MwqQDlUIbuEIR+bqSLhn/QghXz8iG7yOUoKCwEVrUYC8dxNkgYB/Ni8b4mOZqPGr3jxtg=
+    secret_access_key:
+      secure: alGEyPelLKmVOKBMF8K8rm9CX5DjhoByYTTht9P1DkRFDK1a9EoqeKhQlbuxvR8PwCca2cJQtDNWLvriqkwAi+tmjf5brz4bObyEANuK/XxuSftRL/ahzjjkR3SwL/aIYvN74RUQDluFu2LrhN4hoaex2Ni7dAXVaPDAGJmpp1I=
+    region: us-east-1
+    app: training-dlc
+    env: trainingDlc-env
+    zip_file: training-dlc.zip
+    bucket_name: elasticbeanstalk-us-east-1-608492894188
+    on:
+      repo: KinveyClientServices/training-dlc
+      branch: feature/travis
