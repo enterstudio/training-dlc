@@ -7,8 +7,7 @@ before_deploy:
 - make
 deploy:
   provider: elasticbeanstalk
-  access-key-id:
-  - secure: JxU7npwZmYo7PbS84lNNAU/2ddN1xIIjF1q8PoFh9h3647VWZlLakBWXbcwdjusy1fW0gv5CDSrzpwW5ETbJVtX9ZgZZn1RIJ82qjUl0XGHYwKgVS+LnOmLZPsY5xbIOtKYyVsznMs/ayqCwjhJx+LPN85op1f/UJ9YJvYFzG+Y=
+  access-key-id: AKIAJIJDN7CQWMJ2ZTIQ
   secret-access-key:
   - secure: FBtCbtIS10mGRWfgjyzNwlxpi/JgdVUinrQey2h1g/KL823886YS6hjnbXmt4mdu8m81Dyzyx2N5+xWqCq60rAudGZj7BHXOX43+7PmRTVeHw8j8VJZMcc9Yvpx1IAwwGeUUgE8pd5cM6nO7H7VNXvfKduOhajpveXbyjRgk9YY=
   region: us-east-1
