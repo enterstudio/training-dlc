@@ -8,9 +8,9 @@ before_deploy:
 deploy:
   provider: elasticbeanstalk
   access-key-id:
-    secure: "M3Jyl+7eBsgFWsCAdgxSgqDeG0BmfM2vZJWe/tDGxAnQcwtLF8KfJlL6Bl6TSvyHzHVxSFEWIvYUlYJeDzCnuIWmbOMJD+XR8Qqr6M0Ixb/uPVwL/jH6HljE9iFRFoawYem4bB9rj1XqN/++KEOZ6g3g92gKDHFSnbafmIxeX5E="
+    secure: M3Jyl+7eBsgFWsCAdgxSgqDeG0BmfM2vZJWe/tDGxAnQcwtLF8KfJlL6Bl6TSvyHzHVxSFEWIvYUlYJeDzCnuIWmbOMJD+XR8Qqr6M0Ixb/uPVwL/jH6HljE9iFRFoawYem4bB9rj1XqN/++KEOZ6g3g92gKDHFSnbafmIxeX5E=
   secret-access-key:
-    secure: "XpjhBEaGilhmgT80IbalNloD8qdHIAhDleHL9AgdBEwfQc2x+p+h45IqQYWzDjO7ZGEBc4lGROssLpVeySlUAbpSADTelywEj5cv2cUlWuK62FTU9FORbp8DlYT4r7tYxirVMe/Ch+PicbIbJs1k5iQb/SWXu1xu9QJ/lh9fbxE="
+    secure: XpjhBEaGilhmgT80IbalNloD8qdHIAhDleHL9AgdBEwfQc2x+p+h45IqQYWzDjO7ZGEBc4lGROssLpVeySlUAbpSADTelywEj5cv2cUlWuK62FTU9FORbp8DlYT4r7tYxirVMe/Ch+PicbIbJs1k5iQb/SWXu1xu9QJ/lh9fbxE=
   region: us-east-1
   app: training-dlc
   env: trainingDlc-env
