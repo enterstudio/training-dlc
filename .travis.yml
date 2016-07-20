@@ -9,7 +9,7 @@ deploy:
   provider: elasticbeanstalk
   access-key-id: AKIAJIJDN7CQWMJ2ZTIQ
   secret-access-key:
-  - secure: "FBtCbtIS10mGRWfgjyzNwlxpi/JgdVUinrQey2h1g/KL823886YS6hjnbXmt4mdu8m81Dyzyx2N5+xWqCq60rAudGZj7BHXOX43+7PmRTVeHw8j8VJZMcc9Yvpx1IAwwGeUUgE8pd5cM6nO7H7VNXvfKduOhajpveXbyjRgk9YY="
+    secure: FBtCbtIS10mGRWfgjyzNwlxpi/JgdVUinrQey2h1g/KL823886YS6hjnbXmt4mdu8m81Dyzyx2N5+xWqCq60rAudGZj7BHXOX43+7PmRTVeHw8j8VJZMcc9Yvpx1IAwwGeUUgE8pd5cM6nO7H7VNXvfKduOhajpveXbyjRgk9YY=
   region: us-east-1
   app: training-dlc
   env: trainingDlc-env
