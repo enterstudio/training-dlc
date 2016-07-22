@@ -3,6 +3,8 @@ node_js:
 - '6.0'
 install:
 - npm install
+before_deploy:
+- kinvey deploy
 deploy:
   provider: elasticbeanstalk
   region: us-east-1
