@@ -5,11 +5,12 @@ install:
 - npm install
 before_deploy:
 - make
+- pwd
 - ls -la
 deploy:
   provider: elasticbeanstalk
-  access-key-id: AKIAJIJDN7CQWMJ2ZTIQ
-  secret-access-key:
+  access_key_id: AKIAJIJDN7CQWMJ2ZTIQ
+  secret_access_key:
     secure: RXHIZK44DoExuVdukqVGSbi5b/sow+30N2ikyN6BqrVMPUQXTVkC0fIX0Niu4NU7sMHzZD9sc+n2eWACb1cbR4ZWr/bL9b8Le1VogJ2ZZoNhAc0FkxZAhvkd3OVBWWGsTqCGXSSGF701GO+XrjMak0Xw9rSpY0ECTX5QKQOe2mc=
   region: us-east-1
   app: training-dlc
