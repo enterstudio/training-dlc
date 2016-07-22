@@ -3,8 +3,10 @@ node_js:
 - '6.0'
 install:
 - npm install
+- npm install kinvey-dlc-cli
 before_deploy:
-- kinvey deploy
+- ls -la
+- ./kinvey deploy
 deploy:
   provider: elasticbeanstalk
   region: us-east-1
