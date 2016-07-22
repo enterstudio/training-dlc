@@ -9,7 +9,6 @@ before_deploy:
 - ls -la training-dlc.zip
 deploy:
   provider: elasticbeanstalk
-  access_key_id: AKIAJIJDN7CQWMJ2ZTIQ
   region: us-east-1
   app: training-dlc
   env: trainingDlc-env
@@ -19,4 +18,5 @@ deploy:
     branch: feature/travis
 env:
   global:
-    secure: MZCuwxgcjxkrIqB+9q5cNj8XPvHCOGYl/csiys9sDiNB3GY924twD1aYBxqBYNpsvImayrS7G4tqlWrTsYA6p4iOkcJIsl0BXVOCKEAdHy3GEQ3ahivtng32Dw+/wV6cZJCKe4QV2N6Nw0bsysHjIEQBdo51LPLxWFzMCbs5u08=
+  - secure: HlT47l4l7DVFirag6ENDf/pdByzYGBtKU/w3hrSHC6GJQ8dJt1W73KeL7BgvQDWRKiFkkeXpS5gnM/vP+bNr5t/rRxH6bE1wzFx1peYJyTMxNhhUMVIeUyloUphZOVNtorlozoKH5Pu5LrROrjFvBIhwJi2hky348aw1HvppHjk=
+  - secure: fBp5JpjdUu6HOgCyrolfxLdhI268JX6CN0qoLSCHZNtqT37nny0Icd4dZJdhRGGIRibWsp+XvrtR/MFugaikxxJNP2DJyvNDOz9hYXGpe6404LL4ORKrbxGteZuN3DUK/9VZQyMLi9AYQPZxVYKADfvrpRGRqHxHPKz04XQ9M+M=
