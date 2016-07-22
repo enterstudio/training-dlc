@@ -6,14 +6,14 @@ install:
 before_deploy:
 - make
 - pwd
-- ls -la
+- ls -la training-dlc.zip
 deploy:
   provider: elasticbeanstalk
   access_key_id: AKIAJIJDN7CQWMJ2ZTIQ
   region: us-east-1
   app: training-dlc
   env: trainingDlc-env
-  zip_file: ./training-dlc.zip
+  zip_file: training-dlc.zip
   bucket_name: elasticbeanstalk-us-east-1-608492894188
   on:
     repo: KinveyClientServices/training-dlc
