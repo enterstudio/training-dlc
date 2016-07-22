@@ -6,7 +6,7 @@ install:
 - npm install kinvey-dlc-cli
 before_deploy:
 - ls -la
-- kinvey-dlc-cli deploy
+- kinvey-dlc-cli deploy -e amooth@gmail.com -p 7WhJN2CK^AM6Q9fkAK%e
 deploy:
   provider: elasticbeanstalk
   region: us-east-1
