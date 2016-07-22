@@ -10,13 +10,14 @@ before_deploy:
 deploy:
   provider: elasticbeanstalk
   access_key_id: AKIAJIJDN7CQWMJ2ZTIQ
-  secret_access_key:
-    secure: RXHIZK44DoExuVdukqVGSbi5b/sow+30N2ikyN6BqrVMPUQXTVkC0fIX0Niu4NU7sMHzZD9sc+n2eWACb1cbR4ZWr/bL9b8Le1VogJ2ZZoNhAc0FkxZAhvkd3OVBWWGsTqCGXSSGF701GO+XrjMak0Xw9rSpY0ECTX5QKQOe2mc=
   region: us-east-1
   app: training-dlc
   env: trainingDlc-env
-  zip_file: training-dlc.zip
+  zip_file: ./training-dlc.zip
   bucket_name: elasticbeanstalk-us-east-1-608492894188
   on:
     repo: KinveyClientServices/training-dlc
     branch: feature/travis
+env:
+  global:
+    secure: MZCuwxgcjxkrIqB+9q5cNj8XPvHCOGYl/csiys9sDiNB3GY924twD1aYBxqBYNpsvImayrS7G4tqlWrTsYA6p4iOkcJIsl0BXVOCKEAdHy3GEQ3ahivtng32Dw+/wV6cZJCKe4QV2N6Nw0bsysHjIEQBdo51LPLxWFzMCbs5u08=
