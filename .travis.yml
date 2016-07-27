@@ -2,20 +2,6 @@ language: node_js
 node_js:
 - '5'
 install:
-- npm install
 - npm install kinvey-dlc-cli
-before_deploy:
-- kinvey-dlc-cli deploy -e amooth@gmail.com -p 7WhJN2CK^AM6Q9fkAK%e
 deploy:
-  provider: elasticbeanstalk
-  region: us-east-1
-  app: training-dlc
-  env: trainingDlc-env
-  bucket_name: elasticbeanstalk-us-east-1-608492894188
-  on:
-    repo: KinveyClientServices/training-dlc
-    branch: feature/travis
-env:
-  global:
-  - secure: HlT47l4l7DVFirag6ENDf/pdByzYGBtKU/w3hrSHC6GJQ8dJt1W73KeL7BgvQDWRKiFkkeXpS5gnM/vP+bNr5t/rRxH6bE1wzFx1peYJyTMxNhhUMVIeUyloUphZOVNtorlozoKH5Pu5LrROrjFvBIhwJi2hky348aw1HvppHjk=
-  - secure: fBp5JpjdUu6HOgCyrolfxLdhI268JX6CN0qoLSCHZNtqT37nny0Icd4dZJdhRGGIRibWsp+XvrtR/MFugaikxxJNP2DJyvNDOz9hYXGpe6404LL4ORKrbxGteZuN3DUK/9VZQyMLi9AYQPZxVYKADfvrpRGRqHxHPKz04XQ9M+M=
+- kinvey-dlc-cli deploy -e amooth@gmail.com -p 7WhJN2CK^AM6Q9fkAK%e
