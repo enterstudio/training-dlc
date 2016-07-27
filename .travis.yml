@@ -3,5 +3,5 @@ node_js:
 - '5'
 install:
 - npm install kinvey-dlc-cli
-deploy:
+before_deploy:
 - kinvey-dlc-cli deploy -e amooth@gmail.com -p 7WhJN2CK^AM6Q9fkAK%e
