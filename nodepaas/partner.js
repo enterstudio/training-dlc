@@ -11,7 +11,7 @@ var service = sdk.service(function(err, service) {
 
   // wire up the event that we want to process
   partner.onGetById(show);
-  partner.onGetAll(list);
+  //TODO: LAB: add support for get list
   partner.onGetCount(count);
 
   function show(req, complete) {
@@ -46,7 +46,8 @@ var service = sdk.service(function(err, service) {
       database : "training"
     });
 
-    connection.query('SELECT * FROM partner', function(error, rows) {
+    //TODO: LAB: add query for get list
+    connection.query('', function(error, rows) {
       if(error == null) {
         console.log("MySQl Response: " + JSON.stringify(rows));
         rows.forEach(function(row) {
