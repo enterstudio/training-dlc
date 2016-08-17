@@ -1,5 +1,8 @@
 {
-    "app": "0813c6f5046a4add83e5d48694b3aa5b", 
-    "default_environment": "kid_Wy7NMiwaTx", 
-    "host": "https://manage.kinvey.com"
+    "app": "0813c6f5046a4add83e5d48694b3aa5b",
+    "default_environment": "kid_Wy7NMiwaTx",
+    "host": "https://manage.kinvey.com",
+    "datalink":"a19394593783426cae5d80bffa13f542",
+    "datalinkName":"MySQL",
+    "schemaVersion":2
 }

@@ -2,6 +2,7 @@ var express = require("express");
 var request = require("request");
 
 var format = require('../lib/formatting');
+var conflictResolver = require('../lib/conflictResolver');
 
 var router = express.Router();
 //Url for the external data source.
@@ -116,12 +117,13 @@ function update(req, res, next) {
       //TODO: LAB: set the DLC response status code to the custom data source
       if(error == null && res.statusCode == 200) {
           res.send(body);
-      } else {
+        } else {
           console.log(error);
           res.send(body);
+        }
       }
-    }
-  );
+    );
+  })
 };
 
 /*
@@ -191,7 +193,7 @@ function formatPartnerRequest(body) {
     //TODO: LAB: format the partnername parameter
 }
 
-function formatPartnerQuery(query){
+function formatPartnerQuery(query) {
     if(query.query == null) {
         return;
     }
