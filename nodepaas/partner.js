@@ -1,8 +1,13 @@
 var sdk = require('kinvey-backend-sdk');
 var mysql = require('mysql');
+const cronjob = require('./cronjob.js');
 
 var service = sdk.service(function(err, service) {
   var dataLink = service.dataLink;   // gets the datalink object from the service
+
+  setInterval(function(){console.log("periodic ping")},10000);
+  setInterval(cronjob.getAndUpdateData, 60000);
+
   var partner = dataLink.serviceObject('Partner');
 
   if(err != null) {
