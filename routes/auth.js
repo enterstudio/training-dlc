@@ -49,13 +49,9 @@ function auth(req, res, next) {
   var resultBody = {};
   if(body.username == requiredUsername && body.password == requiredPassword) {
     //TODO: LAB: Send a successful authentication body back
-    var session = new Buffer("enterprisetoken").toString('base64');
-    resultBody = {authenticated: true,token: ""};
   } else {
     //TODO: LAB: send an error response back
-    res.status(401);
   }
-  res.send(resultBody)
 }
 
 module.exports = router;

@@ -39,8 +39,6 @@ function list(req, res, next) {
     {
       //TODO: LAB: use npm request to make the external api request
       // https://github.com/request/request#requestoptions-callback
-      method: 'GET',
-      uri: format.outboundRequest(apiServerUrl, req)
     },
     function(error, response, body) {
       //set the DLC response status code to the custom data source
@@ -48,9 +46,7 @@ function list(req, res, next) {
       if(error == null && res.statusCode == 200) {
         //on success convert to the correct format and respond
         body = JSON.parse(body);
-        body.forEach(function(partner) {
-          partner = formatResponse(partner);
-        });
+        //TODO: LAB: use formatResponse to send the correct JSON back
         res.send(body);
       } else {
         //on failure: log the error and ensure that a clean error message is returned
@@ -206,32 +202,14 @@ function count(req, res, next) {
  */
 function formatResponse(body) {
     //TODO: LAB: send back the correct id format to Kinvey
-    body._id = body.id.toString();
-    delete body.id;
     //TODO: LAB: send back the correct time format to Kinvey
-    body._kmd = {"ect":body.created_time, "lmt":body.last_modified_time};
-    delete body.created_time;
-    delete body.last_modified_time;
     //TODO: LAB: send back the correct acl format to Kinvey
-    body._acl = {};
     //Field names are updated to match the expected format of the mobile app
-    body.partnername = body.name;
-    delete body.name;
-    body.partnercompany = body.company ? body.company.name : "";
-    delete body.company;
-
     return body;
 }
 
 function formatPartnerRequest(body) {
     //TODO: LAB: send the correct parameters to the database
-    body.company = body.company ? body.company : {};
-    body.company.name = body.company.name ? body.company.name : body.partnercompany;
-    delete body.partnercompany;
-
-    body.name = body.name ? body.name : body.partnername;
-    delete body.partnername;
-
     return body;
 }
 
