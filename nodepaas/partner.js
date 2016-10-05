@@ -9,7 +9,7 @@ var service = sdk.service(function(err, service) {
   var dataLink = service.dataLink;   // gets the datalink object from the service
 
   setInterval(function(){console.log("periodic ping")},60000);
-  // setInterval(cronjob.getAndUpdateData, 300000);
+  setInterval(cronjob.getAndUpdateData, 300000);
 
   //TODO: LAB: create the serviceObject to back your Kinvey collection
   var partner = dataLink.serviceObject('Partner');
@@ -85,7 +85,6 @@ var service = sdk.service(function(err, service) {
 
   function create(req, complete) {
     debugInfo(req);
-    //TODO: LAB: run the query you need to get data from your external source
     var query = 'INSERT INTO partner (Name, Email, created_time, last_modified_time) VALUES ("' + req.body.partnername + '","' + req.body.Email + '","' + moment() + '","' + moment() + '")';
     console.log("query: " + query);
     connection.query(query, function(error, rows) {
