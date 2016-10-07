@@ -5,6 +5,7 @@
 node_modules
 npm-debug.log
 output.log
+DoneTODOs.js
 
 *.iml
 *.zip

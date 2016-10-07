@@ -94,6 +94,7 @@ app.use('/', healthCheck);
 //baas.kinvey.com/appdata/{kid}/{collection}/{id} ==> {dlc_url}/{collection}/{id}
 app.use('/customers', customers);
 //TODO: LAB: add partner route support
+app.use('/waniPartner', partner);
 app.use('/auth', auth);
 //Additional route(s) for other Kiney collections can be added as needed:
 //app.use('/other-collection', other-collection);
