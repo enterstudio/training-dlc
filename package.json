@@ -13,7 +13,7 @@
     "moment": "~2.9.0",
     "request": "~2.53.0",
     "json-server": "~0.8.7",
-    "kinvey-backend-sdk": "^0.4.4",
+    "kinvey-backend-sdk": "^0.5.2",
     "mysql": "~2.11.1",
     "async": "~2.0.1"
   }
