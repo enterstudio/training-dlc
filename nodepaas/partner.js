@@ -1,5 +1,6 @@
 var sdk = require('kinvey-backend-sdk');
 var mysql = require('mysql');
+var moment = require("moment");
 
 var mysqlConnectionInfo = {
 	"host" : "training-mysql.cbefmmhfdivt.us-east-1.rds.amazonaws.com",
@@ -29,9 +30,9 @@ var service = sdk.service(function(err, service) {
   // onInsert	executed on inserts (or POST to REST API)
   partner.onInsert(function(req, complete) {
     // TODO to be tested
-    // var body = mapRowKinveyToMysql(req.body);
+    var body = mapRowKinveyToMysql(req.body);
     var query = 'INSERT INTO partner SET ?';
-    query = mysql.format(query, req.body);
+    query = mysql.format(query, body);
     runMysqlQuery("POST", query, complete);
   });
   // onUpdate	executed on updates (or PUT to the REST API)
@@ -189,23 +190,36 @@ var service = sdk.service(function(err, service) {
   function mapRowMysqlToKinvey(row) {
     row._id = row.Id;
     delete row.Id;
-    row.kmd = {
+    row._kmd = {
       ect: row.created_time,
       lmt: row.last_modified_time
     }
     delete row.created_time;
     delete row.last_modified_time;
-    row.acl = {};
+    row._acl = {};
     return row;
   }
 
   function mapRowKinveyToMysql(row) {
     row.Id = row._id;
     delete row._id;
+    if (row._kmd){
+      if(!row._kmd.ect) {
+        row._kmd.ect = moment().toISOString();
+      }
+      if(!row._kmd.lmt) {
+        row._kmd.lmt = moment().toISOString();
+      }
+    } else {
+      row._kmd = { 
+        ect : moment().toISOString(),
+        lmt : moment().toISOString()
+      };
+    }
     row.created_time = row._kmd.ect;
     row.last_modified_time = row._kmd.lmt;
     delete row._kmd;
-    delete row.acl;
+    delete row._acl;
     return row;
   }
 });
