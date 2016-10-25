@@ -6,6 +6,7 @@ node_modules
 npm-debug.log
 output.log
 DoneTODOs.js
+.kinvey
 
 *.iml
 *.zip

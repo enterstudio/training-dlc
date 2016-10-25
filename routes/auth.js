@@ -42,17 +42,22 @@ function auth(req, res, next) {
   //    res.send(responseBody);
   //  }
   //);
-  var body = format.request(req.body),
-      requiredUsername = "custom",
-      requiredPassword = "1234";
+  var body = format.request(req.body);
+  var requiredUsername = "custom";
+  var requiredPassword = "1234";
 
   var resultBody = {};
   if(body.username == requiredUsername && body.password == requiredPassword){
     //TODO: LAB: return the body needed by MIC
+    res.status(200);
+    resultBody.authenticated = true;
+    resultBody.token = new Buffer("some-mic-encoded-token").toString('base64');
   }else{
     //TODO: LAB: return a valid error response to MIC
+    res.status(401);
+    resultBody.authError = "Custom MIC error";
   }
-  res.send(resultBody)
+  res.send(resultBody);
 }
 
 module.exports = router;
