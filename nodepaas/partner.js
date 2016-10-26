@@ -111,6 +111,12 @@ var service = sdk.service(function(err, service) {
     console.log(req);
     var query = "";
     switch(method) {
+      case "onUpdate":
+        var body = mapRowKinveyToMysql(req.body);
+        query = 'UPDATE partner SET ?';
+        query = mysql.format(query, body);
+        query += ' WHERE Id=' + req.entityId + ';';
+        break;
       case "onGetCount":
         query = "SELECT COUNT(*) AS count FROM partner;";
         break;
@@ -181,8 +187,17 @@ var service = sdk.service(function(err, service) {
   }
 
   function processMySQLPostOutput(rows, callback){
-    // console.log(rows.insertId);
+    // console.log(rows);
     var query = "SELECT * FROM partner WHERE Id=" + rows.insertId + ";";
+    callback(null, query);
+    // handleErrors(statuscodes.notImplemented, "Not complete yet! Check logs", complete);
+  }
+
+  function processMySQLPutOutput(entityId, rows, callback){
+    console.log(entityId);
+    console.log(rows);
+    console.log(typeof callback);
+    var query = "SELECT * FROM partner WHERE Id=" + entityId + ";";
     callback(null, query);
     // handleErrors(statuscodes.notImplemented, "Not complete yet! Check logs", complete);
   }
@@ -277,9 +292,27 @@ var service = sdk.service(function(err, service) {
     });
   });
 
-  // TODO the ones below are remaining
   // onUpdate executed on updates (or PUT to the REST API)
-  partner.onUpdate(notImplementedHandler);
+  partner.onUpdate(function(req, complete){
+    // console.log(req);
+    async.waterfall([
+        async.apply(constructMySQLquery, "onUpdate", req),
+        establishMySQLConnection,
+        executeMySQLQuery,
+        async.apply(processMySQLPutOutput, req.entityId),
+        establishMySQLConnection,
+        executeMySQLQuery,
+        processMySQLGetOneOutput
+    ], function (err, result) {
+        if (err) {
+          handleErrors(statuscodes.runtimeError, err.stack, complete);
+        } else {
+          handleSuccess(statuscodes.created, result, complete);
+        }
+    });
+  });
+
+  // TODO the ones below are remaining
   // onDeleteByQuery  executed when a query is included as part of a DELETE
   // onDeleteAll  executed when the DELETE command is invoked
   // onGetByQuery retrieve results based on a query
