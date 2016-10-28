@@ -12,7 +12,7 @@ var service = sdk.service(function(err, service) {
   timecards.onGetById(show);
 
   function show(req, complete) {
-    var apiServerUrl = "https://mblvbdmz1.mitre.org/trs-d/app/kinvey/timecards/37176";
+    var apiServerUrl = "your url here";
     //TODO: add appropriate security headers (x-kinvey, mmerrill)
     request({method: 'GET', uri: apiServerUrl}, function(error, response, body) {
       res.status((error && error.status) || response.statusCode);
