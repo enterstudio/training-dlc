@@ -17,7 +17,7 @@ const service = sdk.service(function(err, service) {
       useMasterSecret: false
     }
     console.dir(modules);
-    const users = modules.dataStore().collection('user');
+    const users = modules.dataStore(options).collection('user');
     
     console.dir(modules.requestContext);
     const currentUserName = modules.requestContext.getAuthenticatedUsername();
