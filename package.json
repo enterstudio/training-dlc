@@ -7,13 +7,7 @@
     "dev": "nodemon -w routes/ -w app.js --exec npm start"
   },
   "dependencies": {
-    "body-parser": "~1.12.0",
-    "debug": "~2.1.1",
-    "express": "~4.12.0",
-    "moment": "~2.9.0",
     "request": "~2.53.0",
-    "json-server": "~0.8.7",
-    "kinvey-backend-sdk": "^0.4.0",
-    "mysql": "~2.11.1"
+    "kinvey-backend-sdk": "^0.5.0"
   }
 }

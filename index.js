@@ -1,3 +1,1 @@
-module.exports = require('./nodepaas/timecards.js');
-//module.exports = require('./nodepaas/artists.js');
-//module.exports = require('./nodepaas/playlists.js');
+module.exports = require('./timecards.js');
