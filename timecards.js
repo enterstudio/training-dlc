@@ -1,9 +1,9 @@
-const sdk = require('kinvey-backend-sdk');
+const sdk = require('kinvey-flex-sdk');
 const request = require("request");
 
-const service = sdk.service(function(err, service) {
-  const dataLink = service.dataLink;
-  const timecards = dataLink.serviceObject('timecards');
+const service = sdk.service(function(err, flex) {
+  const data = flex.data;
+  const timecards = data.serviceObject('timecards');
 
   if(err != null) {
     console.log(JSON.stringify(err));
@@ -19,13 +19,15 @@ const service = sdk.service(function(err, service) {
     console.dir(modules);
     const users = modules.dataStore(options).collection('user');
     
-    console.dir(modules.requestContext);
     const currentUserName = modules.requestContext.getAuthenticatedUsername();
     const currentUserId = modules.requestContext.getAuthenticatedUserId();
 
+    console.log("username: " + currentUserName);
     console.log("userid: " + currentUserId);
 
-    users.findById(currentUserId, function(err, result) {
+    console.dir(users.findById);
+    users.findById(currentUserId, (err, result) => {
+      console.dir(result);
       var options = {
         method: 'GET',
         url: 'your url here',
@@ -35,7 +37,6 @@ const service = sdk.service(function(err, service) {
       };
       //TODO: add appropriate security headers (x-kinvey, mmerrill)
       request(options, function(error, response, body) {
-        res.status((error && error.status) || response.statusCode);
         if(error == null && res.statusCode == 200) {
           //on success convert to the correct format and respond
           body = JSON.parse(body);
