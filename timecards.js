@@ -25,19 +25,18 @@ const service = sdk.service(function(err, flex) {
     console.log("username: " + currentUserName);
     console.log("userid: " + currentUserId);
 
-    console.dir(users.findById);
     users.findById(currentUserId, (err, result) => {
       console.dir(result);
       var options = {
         method: 'GET',
-        url: 'your url here',
+        url: 'http://trainingdlc.us-east-1.elasticbeanstalk.com/Partner',
         headers: {
-          'User-Agent': 'request'
+          'User-Agent': 'test'
         }
       };
       //TODO: add appropriate security headers (x-kinvey, mmerrill)
       request(options, function(error, response, body) {
-        if(error == null && res.statusCode == 200) {
+        if(error == null && response.statusCode == 200) {
           //on success convert to the correct format and respond
           body = JSON.parse(body);
           return complete(body).ok().next();
