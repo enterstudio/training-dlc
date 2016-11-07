@@ -29,43 +29,38 @@ var service = sdk.service(function(err, service) {
 
   // common functions
   function notImplementedHandler(req, complete) {
-  	handleErrors(statuscodes.notImplemented,"This goes in the output as debug message!", complete);
+  	handleResponse(statuscodes.notImplemented,"This goes in the output as debug message!", complete);
   }
 
-  function handleSuccess(successcode, body, complete){
-    switch(successcode) {
+  function handleResponse(responsecode, bodyOrDebug, complete){
+    switch(responsecode) {
       case 201:
-        return complete(body).created().next();
+        return complete(bodyOrDebug).created().next();
         break;
       case 200:
-      default:
-        return complete(body).ok().next();
-    }
-  }
-
-  function handleErrors(errorcode, debug, complete) {
-    switch(errorcode) {
+        return complete(bodyOrDebug).ok().next();
+        break;
       case 404:
-          return complete(debug).notFound().next();
+          return complete(bodyOrDebug).notFound().next();
           break;
       case 400:
-          return complete(debug).badRequest().next();
+          return complete(bodyOrDebug).badRequest().next();
           break;
       case 401:
-          return complete(debug).unauthorized().next();
+          return complete(bodyOrDebug).unauthorized().next();
           break;
       case 403:
-          return complete(debug).forbidden().next();
+          return complete(bodyOrDebug).forbidden().next();
           break;
       case 405:
-          return complete(debug).notAllowed().next();
+          return complete(bodyOrDebug).notAllowed().next();
           break;
       case 501:
-          return complete(debug).notImplemented().next();
+          return complete(bodyOrDebug).notImplemented().next();
           break;
       case 550:
       default:
-          return complete(debug).runtimeError().next();
+          return complete(bodyOrDebug).runtimeError().next();
     }
   }
 
@@ -106,9 +101,24 @@ var service = sdk.service(function(err, service) {
     return row;
   }
 
+  function mapKinveyQueryToMysql(query) {
+    if (query._id) {
+      query.Id = query._id;
+      delete query._id;
+    }
+    if (query["_kmd.ect"]) {
+      query.created_time = query.["_kmd.ect"];
+      delete query["_kmd.ect"];
+    }
+    if (query["_kmd.lmt"]) {
+      query.last_modified_time = query.["_kmd.lmt"];
+      delete query["_kmd.lmt"];
+    }
+    return query;
+  }
+
   // async waterfall functions
   function constructMySQLquery(method, req, callback) {
-    console.log(req);
     var query = "";
     switch(method) {
       case "onUpdate":
@@ -120,8 +130,14 @@ var service = sdk.service(function(err, service) {
       case "onGetCount":
         query = "SELECT COUNT(*) AS count FROM partner;";
         break;
+      case "onGetCountByQuery":
+        query = "SELECT COUNT(*) AS count FROM partner " + parseQuery(req.query) + ";";
+        break;
       case "onDeleteById":
         query = "DELETE FROM partner WHERE Id=" + req.entityId + ";";
+        break;
+      case "onDeleteByQuery":
+        query = "DELETE FROM partner " + parseQuery(req.query) + ";";
         break;
       case "onInsert":
         var body = mapRowKinveyToMysql(req.body);
@@ -131,6 +147,10 @@ var service = sdk.service(function(err, service) {
       case "onGetById":
         query = "SELECT * FROM partner WHERE Id=" + req.entityId + ";";
         break;
+      case "onGetByQuery":
+        query = "SELECT * FROM partner " + parseQuery(req.query) + ";";
+        console.log(query);
+        break;
       case "onGetAll":
       default:
         query+= "SELECT * FROM partner;";
@@ -138,15 +158,52 @@ var service = sdk.service(function(err, service) {
     callback(null, query);
   }
 
-  function parseQuery(querystring) {
-    var query = JSON.parse(querystring);
-    // TODO this is remaining
-    return "WHERE Name = 'Elon'";
-  }
+  function parseQuery(query) {
+    var mysqlQuery = "";
+    console.log(query);
+    // handling http://devcenter.kinvey.com/rest/guides/datastore#operators
+    // implicit AND is default
+    var filters = JSON.parse(query.query);
+    console.log(filters);
+    for (var filter in filters) {
+      console.log(filter);
+      var filtervalue = filters[filter];
+      console.log(filtervalue);
+      console.log(typeof filtervalue);
+      if (typeof filtervalue === 'string' || typeof filtervalue === 'number') {
+        if (mysqlQuery === "") {
+          mysqlQuery += " WHERE ";
+        } else {
+          mysqlQuery += " AND ";
+        }
+        mysqlQuery += filter + " = '" + filtervalue + "'";
+      }
+      // else {
+        // explicit AND/OR not handled
+        // comparison operators not handled
+      // }
+    }
 
-  function handleModifiers() {
-    // TODO this is remaining
-    return "";
+    delete query.query;
+    // handling http://devcenter.kinvey.com/rest/guides/datastore#modifiers
+    console.log(query);
+    if (query.limit) {
+      // console.log(query.limit);
+      mysqlQuery += " LIMIT " + query.limit;
+    }
+    if (query.skip) {
+      // console.log(query.skip);      
+      mysqlQuery += " OFFSET " + query.skip;
+    }
+    // if (query.sort) {
+      // sort not handled
+    // }
+    // if (query.fields) {
+      // fields not handled      
+    // }
+
+    console.log(mysqlQuery);
+    return mysqlQuery;
   }
 
   function establishMySQLConnection(query, callback) {
@@ -154,7 +211,7 @@ var service = sdk.service(function(err, service) {
     connection.connect(function(err) {
       if (err) {
         console.error('error connecting: ' + err.stack);
-        // handleErrors(statuscodes.runtimeError, "Error connecting to the database", complete);
+        // handleResponse(statuscodes.runtimeError, "Error connecting to the database", complete);
         callback(err);
       }
       console.log('connected as id ' + connection.threadId);
@@ -166,7 +223,7 @@ var service = sdk.service(function(err, service) {
     connection.query({sql: query}, function (err, rows) {
       if (err) {
         console.error('error executing: ' + err.stack);
-        // handleErrors(statuscodes.runtimeError, "Error running the query - " + err.code, complete);
+        // handleResponse(statuscodes.runtimeError, "Error running the query - " + err.code, complete);
         callback(err);
       }
       console.log(rows);
@@ -190,7 +247,7 @@ var service = sdk.service(function(err, service) {
     // console.log(rows);
     var query = "SELECT * FROM partner WHERE Id=" + rows.insertId + ";";
     callback(null, query);
-    // handleErrors(statuscodes.notImplemented, "Not complete yet! Check logs", complete);
+    // handleResponse(statuscodes.notImplemented, "Not complete yet! Check logs", complete);
   }
 
   function processMySQLPutOutput(entityId, rows, callback){
@@ -199,7 +256,7 @@ var service = sdk.service(function(err, service) {
     console.log(typeof callback);
     var query = "SELECT * FROM partner WHERE Id=" + entityId + ";";
     callback(null, query);
-    // handleErrors(statuscodes.notImplemented, "Not complete yet! Check logs", complete);
+    // handleResponse(statuscodes.notImplemented, "Not complete yet! Check logs", complete);
   }
 
   function processMySQLDeleteOuput(rows, callback) {
@@ -221,9 +278,9 @@ var service = sdk.service(function(err, service) {
     ], function (err, result) {
         // result now equals 'done'
         if (err) {
-          handleErrors(statuscodes.runtimeError, err.stack, complete);
+          handleResponse(statuscodes.runtimeError, err.stack, complete);
         } else {
-          handleSuccess(statuscodes.ok, result, complete);
+          handleResponse(statuscodes.ok, result, complete);
         }
     });
   });
@@ -236,9 +293,9 @@ var service = sdk.service(function(err, service) {
         processMySQLGetOneOutput
     ], function (err, result) {
         if (err) {
-          handleErrors(statuscodes.runtimeError, err.stack, complete);
+          handleResponse(statuscodes.runtimeError, err.stack, complete);
         } else {
-          handleSuccess(statuscodes.ok, result, complete);
+          handleResponse(statuscodes.ok, result, complete);
         }
     });
   });
@@ -255,9 +312,9 @@ var service = sdk.service(function(err, service) {
         processMySQLGetOneOutput
     ], function (err, result) {
         if (err) {
-          handleErrors(statuscodes.runtimeError, err.stack, complete);
+          handleResponse(statuscodes.runtimeError, err.stack, complete);
         } else {
-          handleSuccess(statuscodes.created, result, complete);
+          handleResponse(statuscodes.created, result, complete);
         }
     });
   });
@@ -270,9 +327,9 @@ var service = sdk.service(function(err, service) {
         processMySQLDeleteOuput
     ], function (err, result) {
         if (err) {
-          handleErrors(statuscodes.runtimeError, err.stack, complete);
+          handleResponse(statuscodes.runtimeError, err.stack, complete);
         } else {
-          handleSuccess(statuscodes.ok, result, complete);
+          handleResponse(statuscodes.ok, result, complete);
         }
     });
   });
@@ -285,9 +342,9 @@ var service = sdk.service(function(err, service) {
         processMySQLCountOutput
     ], function (err, result) {
         if (err) {
-          handleErrors(statuscodes.runtimeError, err.stack, complete);
+          handleResponse(statuscodes.runtimeError, err.stack, complete);
         } else {
-          handleSuccess(statuscodes.ok, result, complete);
+          handleResponse(statuscodes.ok, result, complete);
         }
     });
   });
@@ -305,32 +362,70 @@ var service = sdk.service(function(err, service) {
         processMySQLGetOneOutput
     ], function (err, result) {
         if (err) {
-          handleErrors(statuscodes.runtimeError, err.stack, complete);
+          handleResponse(statuscodes.runtimeError, err.stack, complete);
         } else {
-          handleSuccess(statuscodes.created, result, complete);
+          handleResponse(statuscodes.ok, result, complete);
+        }
+    });
+  });
+
+  // onDeleteAll  executed when the DELETE command is invoked
+  // won't be implementing this for security reasons
+  partner.onDeleteAll(notImplementedHandler);
+
+  // onGetByQuery retrieve results based on a query
+  partner.onGetByQuery(function(req, complete){
+    async.waterfall([
+        async.apply(constructMySQLquery, "onGetByQuery", req),
+        establishMySQLConnection,
+        executeMySQLQuery,
+        processMySQLGetOutput
+    ], function (err, result) {
+        if (err) {
+          handleResponse(statuscodes.runtimeError, err.stack, complete);
+        } else {
+          handleResponse(statuscodes.ok, result, complete);
+        }
+    });
+  });
+
+  // onGetCountByQuery  get the count of the entities in a query result
+  partner.onGetCountByQuery(function(req, complete){
+    async.waterfall([
+        async.apply(constructMySQLquery, "onGetCountByQuery", req),
+        establishMySQLConnection,
+        executeMySQLQuery,
+        processMySQLCountOutput
+    ], function (err, result) {
+        if (err) {
+          handleResponse(statuscodes.runtimeError, err.stack, complete);
+        } else {
+          handleResponse(statuscodes.ok, result, complete);
         }
     });
   });
 
   // TODO the ones below are remaining
   // onDeleteByQuery  executed when a query is included as part of a DELETE
-  // onDeleteAll  executed when the DELETE command is invoked
-  // onGetByQuery retrieve results based on a query
-  partner.onGetByQuery(function(req, complete){
-    var query = "SELECT * FROM partner ";
-    query += parseQuery(req.query.query);
-    query += ";";
-    console.log(req);
-    // runMysqlQuery("GET", query, complete);
-    notImplementedHandler(req,complete);
-  });
-  // onGetCountByQuery  get the count of the entities in a query result
-  partner.onGetCountByQuery(function(req, complete){
-    var query = "SELECT COUNT(*) AS count FROM partner ";
-    query += parseQuery(req.query.query);
-    query += ";";
-    // runMysqlQuery("COUNT", query, complete);
-    notImplementedHandler(req,complete);
+  partner.onDeleteByQuery(function(req, complete){
+    // var query = "SELECT * FROM partner ";
+    // query += parseQuery(req.query);
+    // query += ";";
+    // console.log(query);
+    // // runMysqlQuery("GET", query, complete);
+    // notImplementedHandler(req,complete);
+    async.waterfall([
+        async.apply(constructMySQLquery, "onDeleteByQuery", req),
+        establishMySQLConnection,
+        executeMySQLQuery,
+        processMySQLDeleteOuput
+    ], function (err, result) {
+        if (err) {
+          handleResponse(statuscodes.runtimeError, err.stack, complete);
+        } else {
+          handleResponse(statuscodes.ok, result, complete);
+        }
+    });
   });
 
 });
