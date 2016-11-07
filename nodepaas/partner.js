@@ -101,17 +101,17 @@ var service = sdk.service(function(err, service) {
     return row;
   }
 
-  function mapKinveyQueryToMysql(query) {
+  function mapQueryKinveyToMysql(query) {
     if (query._id) {
       query.Id = query._id;
       delete query._id;
     }
     if (query["_kmd.ect"]) {
-      query.created_time = query.["_kmd.ect"];
+      query.created_time = query["_kmd.ect"];
       delete query["_kmd.ect"];
     }
     if (query["_kmd.lmt"]) {
-      query.last_modified_time = query.["_kmd.lmt"];
+      query.last_modified_time = query["_kmd.lmt"];
       delete query["_kmd.lmt"];
     }
     return query;
@@ -164,6 +164,7 @@ var service = sdk.service(function(err, service) {
     // handling http://devcenter.kinvey.com/rest/guides/datastore#operators
     // implicit AND is default
     var filters = JSON.parse(query.query);
+    filters = mapQueryKinveyToMysql(filters);
     console.log(filters);
     for (var filter in filters) {
       console.log(filter);
@@ -405,15 +406,8 @@ var service = sdk.service(function(err, service) {
     });
   });
 
-  // TODO the ones below are remaining
   // onDeleteByQuery  executed when a query is included as part of a DELETE
   partner.onDeleteByQuery(function(req, complete){
-    // var query = "SELECT * FROM partner ";
-    // query += parseQuery(req.query);
-    // query += ";";
-    // console.log(query);
-    // // runMysqlQuery("GET", query, complete);
-    // notImplementedHandler(req,complete);
     async.waterfall([
         async.apply(constructMySQLquery, "onDeleteByQuery", req),
         establishMySQLConnection,
