@@ -1,18 +1,18 @@
-var sdk = require('kinvey-backend-sdk');
+var sdk = require('kinvey-flex-sdk');
 var mysql = require('mysql');
 var moment = require('moment');
 const cronjob = require('./cronjob.js');
 
 //TODO: LAB: create the KMR service object
-var service = sdk.service(function(err, service) {
+var service = sdk.service((err, flex) => {
   //TODO: LAB: create the KMR dataLink object
-  var dataLink = service.dataLink;   // gets the datalink object from the service
+  var flexData = flex.data;   // gets the datalink object from the service
 
   setInterval(function(){console.log("periodic ping")},60000);
   setInterval(cronjob.getAndUpdateData, 300000);
 
   //TODO: LAB: create the serviceObject to back your Kinvey collection
-  var partner = dataLink.serviceObject('Partner');
+  var partner = flexData.serviceObject('Partner');
 
   if(err != null) {
     console.log(JSON.stringify(err));
