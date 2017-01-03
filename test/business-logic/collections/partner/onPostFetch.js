@@ -1,31 +1,9 @@
-// Standard lib.
-var path = require('path');
-
-// Package modules.
-var tester = require('kinvey-business-logic-testing-library');
-
-// Configure.
-var options = {
-  blRootPath    : path.join(__dirname, '../../../../business-logic'),
-  environmentID : 'kid_ZJb6V2mWTe'
-};
-
 // Test suite.
-describe('vProducts: onPreFetch', function() {
-  // Set-up the client.
-  before('client', function(cb) {
-    this.timeout(0); // Disable timeout.
-    var self = this;
-    tester.util.setup(options, function(err, client) {
-      self.client = client; // Save.
-      cb(err); // Continue.
-    });
-  });
-
+describe('Partner: onPostFetch', function() {
   // Set the endpoint under test.
   before('configure', function() {
-    this.collection = 'vProducts';
-    this.hook = 'onPreFetch';
+    this.collection = 'Partner';
+    this.hook = 'onPostFetch';
   });
 
   // Populate the datastore.
@@ -40,12 +18,6 @@ describe('vProducts: onPreFetch', function() {
       // MongoDB-style JSON query here.
     };
     this.client.dataStore.removeCollectionData(this.collection, query, cb);
-  });
-
-  // Teardown the client.
-  after('client', function(cb) {
-    delete this.client; // Cleanup.
-    tester.util.teardown(options, cb);
   });
 
   // Cleanup.
