@@ -9,9 +9,12 @@ function onPostFetch(request, response, modules) {
     async.each(response.body, eachFunction, completeCallback);
 
     function addEmailField(partner, cb) {
-        if (!partner.email) {
+        if (!partner.Email) {
             partner.email = "";
+        } else {
+          	partner.email = partner.Email;
         }
+      	delete partner.Email;
         return cb();
     }
 

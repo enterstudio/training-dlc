@@ -84,7 +84,7 @@ function onPostSave(request, response, modules) {
             return callback();
         };
 
-        async.waterfall([saveNotificationInCollection, getUnreadNotificationsCount, getUser, sendPayload], callback)
+        async.waterfall([saveNotificationInCollection, getUnreadNotificationsCount, getUser, sendPayload], callback);
     }
 
 
