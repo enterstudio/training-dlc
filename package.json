@@ -7,13 +7,13 @@
     "dev": "nodemon -w routes/ -w app.js --exec npm start"
   },
   "dependencies": {
-    "body-parser": "~1.12.0",
+    "body-parser": "~1.19.2",
     "debug": "~2.1.1",
-    "express": "~4.12.0",
+    "express": "~4.17.3",
     "moment": "~2.9.0",
-    "request": "~2.53.0",
+    "request": "~2.73.0",
     "json-server": "~0.8.7",
-    "kinvey-flex-sdk": "^1.0.1",
+    "kinvey-flex-sdk": "^2.1.0",
     "mysql": "~2.11.1",
     "async": "~2.0.1"
   }
