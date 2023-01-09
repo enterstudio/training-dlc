@@ -8,11 +8,11 @@
   },
   "dependencies": {
     "body-parser": "~1.12.0",
-    "debug": "~2.1.1",
+    "debug": "~3.1.0",
     "express": "~4.12.0",
     "moment": "~2.9.0",
     "request": "~2.53.0",
-    "json-server": "~0.8.7",
+    "json-server": "~0.14.1",
     "kinvey-flex-sdk": "^1.0.1",
     "mysql": "~2.11.1",
     "async": "~2.0.1"
